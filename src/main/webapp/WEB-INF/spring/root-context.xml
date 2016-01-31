@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+	
+	<tx:annotation-driven/>
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!--
+		SimpleDriverDataSource ds= new SimpleDriverD..();
+		ds.setDriverClass ( "org.mariadb.jdbc.Driver");
+		ds.setUsername( "root");
+	 -->
+	<bean id="proxyStation" class="naver.mail.g6g6g63216.dao.StationCacheDao">
+		<qualifier value="proxyStation"></qualifier>
+		<property name="target" ref="remoteStationDao"></property>
+	</bean>
+	
+	<bean id="remoteStationDao" class="naver.mail.g6g6g63216.dao.StationDao">
+		<qualifier value="remoteStation"></qualifier>
+	</bean>
+	<bean id="simpleDs" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+		<property name="url" value="jdbc:mysql://localhost:3306/locationdb"></property>
+		<property name="driverClass" value="org.mariadb.jdbc.Driver"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="1111"></property>
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="simpleDs"></property>
+	</bean>
+		       
+
+	<bean id="tpl" class="org.springframework.jdbc.core.JdbcTemplate">
+		<!-- setDataSource -->
+	    <property name="dataSource" ref="simpleDs" ></property>
+	 </bean>
+	 
+	 <bean id="airService" class="naver.mail.g6g6g63216.AirService">
+	  <property name="pmDao" ref="pmDao"></property>
+	 
+	 </bean>
+	 
+	<bean id="pmDao" class="naver.mail.g6g6g63216.dao.PmDao">
+		<property name="apiKey" value="LX%2Bvip8U1cIkZRIYLe%2Fj20f%2F7QAGPO8I3bIF6PRU9ILI05ynseP670tj5oAmkfnaUDKKbMPLRuQNRdosbKDN%2Fg%3D%3D"></property>
+		<property name="jdbcTemplate" ref="tpl"></property>
+	</bean>
+        
+    <context:component-scan base-package="naver.mail.g6g6g63216" />
+</beans>
