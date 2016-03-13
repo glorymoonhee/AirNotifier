@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import naver.mail.g6g6g63216.vo.StationVO;
 import naver.mail.g6g6g63216.vo.UserVO;
 
 public class UserDao implements IUserDao {
@@ -59,5 +60,13 @@ public class UserDao implements IUserDao {
         });
 		return loginUser ;
 	}
-
+	
+	@Override
+	public void insertStation(Integer userSeq, StationVO station) {
+		String query = "insert into user_station (user,station ) values (?,?)";
+		int nInsert = template.update(query, new Object[]{userSeq,station.getSeq()});
+		System.out.println("inserted new stations : " + nInsert);
+		
+	}
+	
 }

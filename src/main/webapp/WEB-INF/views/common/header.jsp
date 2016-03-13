@@ -18,7 +18,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-      
+      	<li><a href="<%=application.getContextPath()%>/pm/station">시도별관측</a></li>
         <c:if test="${empty sessionScope.user}">
         <li><a href="<%=application.getContextPath()%>/login">로그인</a></li>
         </c:if>

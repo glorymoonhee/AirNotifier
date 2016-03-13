@@ -49,7 +49,7 @@ public class StationDao implements IStationDao {
 		 
 		// System.out.println("URI: " + uri);
 		 Connection con = Jsoup.connect(uri);
-		 con.timeout(10*1000); // 10초
+		 con.timeout(30*1000); // 10초
 		 con.parser(Parser.xmlParser());
 		 try {
 			Document xmlDoc = con.get();
@@ -126,7 +126,13 @@ public class StationDao implements IStationDao {
 		}
 		 
 	}
+	
+	
 
+	@Override
+	public StationVO findStationsByName(String stationName) {
+		throw new RuntimeException("Not Allowed. DB에서 조회하는 메소드이므로 이쪽으로 호출하면 안됨.");
+	}
 	private String encoding(String s) {
 		try {
 			return URLEncoder.encode(s, "utf-8");

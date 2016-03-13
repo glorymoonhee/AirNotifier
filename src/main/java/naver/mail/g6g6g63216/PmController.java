@@ -16,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import naver.mail.g6g6g63216.dao.IStationDao;
 import naver.mail.g6g6g63216.vo.PmData;
+import naver.mail.g6g6g63216.vo.StationVO;
 
 @Controller
 @RequestMapping(value = {"/pm"})
@@ -81,7 +82,7 @@ public class PmController {
 		model.addAttribute("sido", sido);
 		
 		if ( stationName != null ) {
-			List<String> stations = stationDao.findStationsBySido(sido);
+			List<StationVO> stations = stationDao.findStationsBySido2(sido);
 			List<PmData> data = airService.getDataByStation(stationName);
 			model.addAttribute("stations",stations);
 			model.addAttribute("station",stationName);

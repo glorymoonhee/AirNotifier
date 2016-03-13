@@ -26,4 +26,11 @@ public interface IStationDao {
 
 	List<StationVO> findStationsBySido2(String sidoName);
 
+	/**
+	 * 주어진 관측소 이름으로 관측서 정보를 조회합니다.
+	 * @param stationName
+	 * @return
+	 */
+	StationVO findStationsByName(String stationName);
+
 }

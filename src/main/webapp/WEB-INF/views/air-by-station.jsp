@@ -18,11 +18,8 @@ $(document).ready( function() {
 		
 		var stationName = $('#stationName option:selected').val();
 		var sido = $('#sido option:selected').val();
-	
-	document.location.href = ctxpath + '/pm/station?sido='+ sido + '&name=' + stationName ;
- 
-		
-	})
+		document.location.href = ctxpath + '/pm/station?sido='+ sido + '&name=' + stationName ;
+	});
 
 	function renderStations ( stations ) {
 		$("#stationName").empty();
@@ -33,7 +30,7 @@ $(document).ready( function() {
 		var template = '<option value="{$n}">{$n}</option>'
 			$("#stationName").append("<option>[관측소선택]</option>");
 		for( var i=0; i<stations.length; i++){
-			var html = template.replace('{$n}',stations[i]).replace('{$n}', stations[i]);
+			var html = template.replace('{$n}',stations[i].name).replace('{$n}', stations[i].name);
 			$("#stationName").append(html); 
 		}
 	}
@@ -56,7 +53,17 @@ $(document).ready( function() {
 				console.log('fail');
 			}
 		});
-	})
+	});
+	
+	$("#btn_add_place").on("click", function(){
+		
+		var stationName = $('#stationName').val();
+		console.log ("station" , stationName);
+		var url = ctxpath + '/station/register';
+		$.post ( url , {station: stationName }, function( resp ) {
+			console.log ( resp );
+		});
+	});
 	
 });
 </script> 
@@ -73,12 +80,15 @@ $(document).ready( function() {
 <select id="stationName">
 
 	<c:forEach var="i" items="${stations}">
-	 <c:if test="${station eq i}"><option value="${i}" selected="selected" >${i}</option></c:if>
-	 <c:if test="${station ne i}"><option value="${i}"  >${i}</option></c:if>
+	 <c:if test="${station eq i.name}"><option value="${i.name}" selected="selected" >${i.name}</option></c:if>
+	 <c:if test="${station ne i.name}"><option value="${i.name}"  >${i.name}</option></c:if>
 	</c:forEach>
 </select>
  관측소 : ${station}
-  
+<c:if test="${not empty sessionScope.user}">
+	<button id="btn_add_place">장소등록</button>
+	<input type="hidden" id="loginUser" value="${sessionScope.user.seq }">
+</c:if>
  <table class="table table-striped">
  <thead>
 	 <tr>

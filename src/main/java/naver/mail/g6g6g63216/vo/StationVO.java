@@ -1,6 +1,7 @@
 package naver.mail.g6g6g63216.vo;
 
 public class StationVO {
+	private Integer seq ;
 	private String name;
 	private String addr;
 	private String lat;
@@ -11,6 +12,21 @@ public class StationVO {
 		this.addr = addr;
 		this.lat = lat;
 		this.lng = lng;
+	}
+	public StationVO(Integer seq, String name, String addr, String lat, String lng) {
+		super();
+		this.seq = seq;
+		this.name = name;
+		this.addr = addr;
+		this.lat = lat;
+		this.lng = lng;
+	}
+	
+	public Integer getSeq() {
+		return seq;
+	}
+	public void setSeq(Integer seq) {
+		this.seq = seq;
 	}
 	public String getName() {
 		return name;
