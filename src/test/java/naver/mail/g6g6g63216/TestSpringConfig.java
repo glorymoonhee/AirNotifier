@@ -13,6 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.dao.PmDao;
 import naver.mail.g6g6g63216.vo.PlaceVO;
 
@@ -33,7 +34,7 @@ public class TestSpringConfig {
 
 	@Test
 	public void test1() {
-		PmDao pmDao = ctx.getBean(PmDao.class);
+		IPmDao pmDao = ctx.getBean(PmDao.class);
 		List<PlaceVO> fourPlaces = pmDao.findAllPlaces();
 		assertEquals ( 4, fourPlaces.size() );
 	}

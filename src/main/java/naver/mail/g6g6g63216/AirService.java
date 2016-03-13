@@ -2,13 +2,13 @@ package naver.mail.g6g6g63216;
 
 import java.util.List;
 
-import naver.mail.g6g6g63216.dao.PmDao;
+import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.vo.PmData;
 
 public class AirService {
-	private PmDao pmDao;
+	private IPmDao pmDao;
 	
-	public void setPmDao ( PmDao dao) {
+	public void setPmDao ( IPmDao dao) {
 		this.pmDao = dao;
 	}
 	

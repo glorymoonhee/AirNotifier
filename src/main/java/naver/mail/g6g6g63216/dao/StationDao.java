@@ -14,19 +14,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import naver.mail.g6g6g63216.vo.StationVO;
 
 public class StationDao implements IStationDao {
 
-	private String apiKey = "LX%2Bvip8U1cIkZRIYLe%2Fj20f%2F7QAGPO8I3bIF6PRU9ILI05ynseP670tj5oAmkfnaUDKKbMPLRuQNRdosbKDN%2Fg%3D%3D";
+	private String apiKey ; // = "LX%2Bvip8U1cIkZRIYLe%2Fj20f%2F7QAGPO8I3bIF6PRU9ILI05ynseP670tj5oAmkfnaUDKKbMPLRuQNRdosbKDN%2Fg%3D%3D";
 	
 	/* (non-Javadoc)
 	 * @see naver.mail.g6g6g63216.dao.IStationDao#setApiKey(java.lang.String)
 	 */
 	@Override
-	public void setApiKey(String key ) {
+	@Autowired(required=true)
+	public void setApiKey( @Value("${apikey}") String key ) {
+		System.out.println("    API Key in StationDao : " + key);
 		this.apiKey = key;
 	}
 	/* (non-Javadoc)
@@ -90,7 +94,7 @@ public class StationDao implements IStationDao {
 		 
 		// System.out.println("URI: " + uri);
 		 Connection con = Jsoup.connect(uri);
-		 con.timeout(10*1000); // 10√ 
+		 con.timeout(30*1000); // 10√ 
 		 con.parser(Parser.xmlParser());
 		 try {
 			Document xmlDoc = con.get();

@@ -53,7 +53,7 @@ public class PmController {
 	}
 	
 	@RequestMapping ( value = {"/station"})
-	 public String station ( HttpServletRequest req, Model model) throws UnsupportedEncodingException{
+	public String station ( HttpServletRequest req, Model model) throws UnsupportedEncodingException{
 		
 		List<String> sidos = new ArrayList<String>();
 		sidos.add("[지역선택]");
@@ -71,22 +71,27 @@ public class PmController {
 		}else{
 			sido = req.getParameter("sido");
 		}
+		
 		String stationName = req.getParameter("name");
 		
 	
 		System.out.println("sido:" + sido);
 		System.out.println("station: " + stationName);
-		List<PmData> data = airService.getDataByStation(stationName);
-		List<String> stations = stationDao.findStationsBySido(sido);
-	//	System.out.println(data);
-		model.addAttribute("stations",stations);
-		model.addAttribute("station",stationName);
-		model.addAttribute("pmData", data);
-		
-		
-		
 		model.addAttribute("sidos", sidos);
-        model.addAttribute("sido", sido);
+		model.addAttribute("sido", sido);
+		
+		if ( stationName != null ) {
+			List<String> stations = stationDao.findStationsBySido(sido);
+			List<PmData> data = airService.getDataByStation(stationName);
+			model.addAttribute("stations",stations);
+			model.addAttribute("station",stationName);
+			model.addAttribute("pmData", data);
+			
+		}
+	//	System.out.println(data);
+		
+		
+		
 	//	model.addAttribute("selected", stationName);
 		return "air-by-station"; // air-by-station.jsp
 	}

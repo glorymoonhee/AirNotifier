@@ -10,7 +10,7 @@ import naver.mail.g6g6g63216.vo.StationVO;
 
 public class StationCacheDao implements IStationDao {
 
-	//@Autowired(required=true)
+
 	private IStationDao dao ;
 	
 	private Map<String, List<String>> stationMap = new HashMap<String, List<String>>();

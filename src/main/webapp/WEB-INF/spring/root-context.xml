@@ -23,10 +23,10 @@
 		<qualifier value="remoteStation"></qualifier>
 	</bean>
 	<bean id="simpleDs" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-		<property name="url" value="jdbc:mysql://localhost:3306/locationdb"></property>
-		<property name="driverClass" value="org.mariadb.jdbc.Driver"></property>
-		<property name="username" value="root"></property>
-		<property name="password" value="1111"></property>
+		<property name="url" value="${db.url}"></property>
+		<property name="driverClass" value="${db.drivername}"></property>
+		<property name="username" value="${db.user}"></property>
+		<property name="password" value="${db.pass}"></property>
 	</bean>
 
 	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
@@ -40,14 +40,24 @@
 	 </bean>
 	 
 	 <bean id="airService" class="naver.mail.g6g6g63216.AirService">
-	  <property name="pmDao" ref="pmDao"></property>
+	  <property name="pmDao" ref="cachepmDao"></property>
 	 
 	 </bean>
 	 
+	 <bean id="userdao" class="naver.mail.g6g6g63216.dao.UserDao">
+	  <property name="tpl" ref="tpl"></property>
+	 </bean>
+	 
 	<bean id="pmDao" class="naver.mail.g6g6g63216.dao.PmDao">
-		<property name="apiKey" value="LX%2Bvip8U1cIkZRIYLe%2Fj20f%2F7QAGPO8I3bIF6PRU9ILI05ynseP670tj5oAmkfnaUDKKbMPLRuQNRdosbKDN%2Fg%3D%3D"></property>
+		<qualifier value="remotePM"/>
+		<!-- <property name="apiKey" value="${apikey}"></property> -->
 		<property name="jdbcTemplate" ref="tpl"></property>
 	</bean>
+	
+	<bean id="cachepmDao" class="naver.mail.g6g6g63216.dao.CachePmDao">	  
+		<qualifier value="cachedPM"/>  
+	</bean>
         
-    <context:component-scan base-package="naver.mail.g6g6g63216" />
+    <context:component-scan base-package="naver.mail.g6g6g63216.dao, naver.mail.g6g6g63216.service" />
+    <context:property-placeholder location="classpath:*.properties"/>
 </beans>

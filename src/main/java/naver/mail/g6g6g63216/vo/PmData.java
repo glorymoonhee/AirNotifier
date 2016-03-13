@@ -1,7 +1,7 @@
 package naver.mail.g6g6g63216.vo;
 
 public class PmData {
-
+	
 	private String pm100; // "--"
 	private int pm100Grade; // 0~5
 	

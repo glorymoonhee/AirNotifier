@@ -10,6 +10,7 @@
 <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/jquery-1.12.0.js"></script> 
 <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/bootstrap.js"></script>
 <script type="text/javascript">
+var ctxpath = '<%=request.getContextPath()%>';
 $(document).ready( function() {
 	
 
@@ -18,7 +19,7 @@ $(document).ready( function() {
 		var stationName = $('#stationName option:selected').val();
 		var sido = $('#sido option:selected').val();
 	
-	document.location.href = '/api/pm/station?sido='+ sido + '&name=' + stationName ;
+	document.location.href = ctxpath + '/pm/station?sido='+ sido + '&name=' + stationName ;
  
 		
 	})
@@ -41,7 +42,7 @@ $(document).ready( function() {
 		var sidoName = $('#sido option:selected').val();
 		// 1. [지역선택] 이면 건너뜀.
 		
-		$.get ( "/api/query/stations", {sido: sidoName}, function(res){
+		$.get ( ctxpath + "/query/stations", {sido: sidoName}, function(res){
 			// /air/query/stations?sido=sldkjafkdjfkd
 			/*
 			 *  { success : true,
@@ -61,6 +62,7 @@ $(document).ready( function() {
 </script> 
 </head>
 <body>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <select id="sido">
 
 <c:forEach var="i" items="${sidos}">

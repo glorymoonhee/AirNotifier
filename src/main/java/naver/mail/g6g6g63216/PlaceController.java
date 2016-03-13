@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.dao.IStationDao;
-import naver.mail.g6g6g63216.dao.PmDao;
 import naver.mail.g6g6g63216.vo.PlaceVO;
 import naver.mail.g6g6g63216.vo.StationVO;
 
@@ -23,13 +23,14 @@ import naver.mail.g6g6g63216.vo.StationVO;
 public class PlaceController {
 
 	@Autowired
-	private PmDao dao;
+	@Qualifier(value="cachedPM")
+	private IPmDao dao;
 	
 	@Autowired
 	@Qualifier(value="proxyStation")
 	private IStationDao stationDao;
 	
-	public void setDao ( PmDao pmDao) {
+	public void setDao ( IPmDao pmDao) {
 		//System.out.println("[pm dao in PlaceController] " + pmDao);
 		this.dao = pmDao;
 	}
@@ -68,8 +69,8 @@ public class PlaceController {
 	
 	@RequestMapping(value="/stations", method=RequestMethod.GET, produces="application/json" )
 	public @ResponseBody List<StationVO> d(HttpServletRequest req) {
-		  String sido = req.getParameter("sido");
-		       List<StationVO> stations= stationDao.findStationsBySido2(sido);
+		String sido = req.getParameter("sido");
+		List<StationVO> stations= stationDao.findStationsBySido2(sido);
 		return stations;
 	}
 	

@@ -27,8 +27,25 @@ function renderStations ( stations ) {
 	for (i = 0; i < stations.length; i++) {
 	    // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
 	    var pos = new daum.maps.LatLng(stations[i].lat, stations[i].lng);
-	    marker =     new daum.maps.Marker({ position : pos });
-	    marker.setMap(map);
+	    marker  = new daum.maps.Marker({ position : pos });
+	    marker.setMap(map); // 마커가 for문에 표시됨.
+	    
+	    /*
+	     * 클로저라는 문법때문입니다. 
+	     */
+	    
+	    (function ( s, marker ) {
+		    daum.maps.event.addListener(marker, 'click', function() {
+					console.log( new daum.maps.LatLng(s.lat, s.lng) );
+					var infoWindow = new daum.maps.InfoWindow({
+						removable : true,
+						position : new daum.maps.LatLng(s.lat, s.lng),
+						content : s.name
+					});
+			       // 마커 위에 인포윈도우를 표시합니다
+			       infoWindow.open(map, marker);  
+			});
+	    })(stations[i], marker);
 	    
 	    /* var infowindow = new daum.maps.InfoWindow({
 	        position : pos, 

@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.dao.PmDao;
 import naver.mail.g6g6g63216.vo.PmData;
 
@@ -42,7 +43,7 @@ public class AirApiTest {
 
 	@Test
 	public void test() throws IOException {
-		PmDao dao = ctx.getBean(PmDao.class);
+		IPmDao dao = ctx.getBean(PmDao.class);
 		List<PmData> data = dao.queryByStation("ÀºÆò±¸");
 		assertTrue ( data.size() > 0 );
 		System.out.println(org.springframework.core.SpringVersion.getVersion() );
