@@ -9,15 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import naver.mail.g6g6g63216.vo.PlaceVO;
 import naver.mail.g6g6g63216.vo.PmData;
-/**
- * 1시간마다 기샃엉 대기 데이터가 업데이트 되기 때문에 해쉬맵에 담아놓은 데이터를 1시간 간격으로 날려버려야지 새로운 데이터를 확인할 수 있습니다.
- * 그런데 지금 구현은 캐쉬를 영구적으로 들고 있어서 시간이 지나도 처음 등록된 데이터를 서비스하게 됩니다.
- * 
- * 따라서 매시간마다 캐쉬를 비워주는 구현이 필요합니다.
- * (Thread)
- * @author Administrator
- *
- */
+
 public class CachePmDao implements IPmDao {
 
 	private Map<String,PmData> avrSidoData = new HashMap<String, PmData>();
@@ -76,11 +68,11 @@ public class CachePmDao implements IPmDao {
 			
 			while ( true ) {
 				try {
-					Thread.sleep( 60 * 1000 * 30  ); // 30 분마다
+					Thread.sleep( 60 * 1000 * 30  );
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				System.out.println(Thread.currentThread().getName() + " 캐쉬 날리자!");
+				System.out.println(Thread.currentThread().getName() + " 캐占쏙옙 占쏙옙占쏙옙占쏙옙!");
 				synchronized (avrSidoData) {
 					avrSidoData.clear();
 				}

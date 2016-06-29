@@ -23,12 +23,15 @@
         <li><a href="<%=application.getContextPath()%>/login">로그인</a></li>
         </c:if>
          <c:if test="${not empty sessionScope.user}">
+        <li><a href="<%=application.getContextPath()%>/myplaces">관심장소</a></li>
         <li><a href="<%=application.getContextPath()%>/logout">로그아웃</a></li>
         </c:if>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
+      <c:if test="${empty sessionScope.user}">
         <li><a href="<%=application.getContextPath()%>/join">회원가입</a></li>
+      </c:if>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

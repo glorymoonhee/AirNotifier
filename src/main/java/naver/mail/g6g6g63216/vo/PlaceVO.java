@@ -6,6 +6,7 @@ public class PlaceVO {
 	private String lat;
 	private String lng;
 	private String cdate;
+	
 	public int getSeq() {
 		return seq;
 	}

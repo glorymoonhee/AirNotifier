@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
 <script type="text/javascript">
@@ -13,7 +13,7 @@ $(document).ready(function() {
 		var url = '<%=request.getContextPath()%>/doJoin';
 		$.post(url ,data, function(res){
 			if ( res.success ) {
-				alert ( '°¡ÀÔ ¼º°ø ');
+				alert ( 'ê°€ìž…ì„±ê³µ');
 				document.location.href = '<%=request.getContextPath()%>';
 			}
 		});
@@ -28,7 +28,7 @@ $(document).ready(function() {
 	<input type="text" class="form-control" id="email" name="email">
 	<input type="password" class="form-control" id="password" name="password">
 	
-	<input type="button" value="°¡ÀÔÇÏ±â" id="btnJoin">
+	<input type="button" value="ê°€ìž…í•˜ê¸°" id="btnJoin">
 </form>
 
 </body>

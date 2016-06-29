@@ -74,14 +74,14 @@ public class HomeController {
 	
 	
 	@RequestMapping(value = "/doJoin", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
-	public @ResponseBody String doJoin(Model model, HttpServletRequest req){
+	public @ResponseBody String doJoin(Model model, HttpServletRequest req) {
 	     String email = req.getParameter("email");
 	     String pass = req.getParameter("password");
 	     
 	     UserVO user = userService.insertUser ( email, pass  );
-	     System.out.println("°¡ÀÔ: " + user.toString());
+	     System.out.println("ê°€ì…: " + user.toString());
 	     
-	     // json Æ÷¸ËÀ¸·Î ÀÀ´äÀ» º¸³»¾ß ÇÕ´Ï´Ù. { "success" : true}
+	     // json í¬ë§·ìœ¼ë¡œ ì‘ë‹µì„ ë³´ë‚´ì•¼ í•©ë‹ˆë‹¤. { "success" : true}
 	     return "{\"success\": true}";
 	}
 	
@@ -98,17 +98,17 @@ public class HomeController {
 	     String pass = req.getParameter("password");
 	     
 	     UserVO user = userService.findUser(email,pass);
-	     System.out.println("·Î±ä: " + user.toString());
+	     System.out.println("ë¡œê¸´: " + user.toString());
 	     
 	     /*
-	      * 1. ¼¼¼±¿¡ »ç¿ëÀÚ µî·ÏÇØÁà¾ßÇÔ.
+	      * 1. ì„¸ì„ ì— ì‚¬ìš©ì ë“±ë¡í•´ì¤˜ì•¼í•¨.
 	      */
 	     session.setAttribute("user", user);
 	     
 	     return "{\"success\": true}";
 	}
 	
-	private List<String> sidoNames = Arrays.asList("¼­¿ï", "°æ±â", "°­¿ø", "Àü³²", "ÀüºÏ", "°æ³²" , "°æºÏ", "Ãæ³²", "ÃæºÏ");
+	private List<String> sidoNames = Arrays.asList("ì„œìš¸", "ê²½ê¸°", "ê°•ì›", "ì „ë‚¨", "ì „ë¶", "ê²½ë‚¨" , "ê²½ë¶", "ì¶©ë‚¨", "ì¶©ë¶");
 	private void readPmData(Model model) {
 		// TODO Auto-generated method stub
 		
@@ -123,13 +123,13 @@ public class HomeController {
 		model.addAttribute("sidoData", list);
 		model.addAttribute("sidoMap", sidoMap);
 		
-//		PmData seoul = dao.getAvrData("¼­¿ï");
+//		PmData seoul = dao.getAvrData("ì„œìš¸");
 //		model.addAttribute("seoul",seoul);
 //		
-//		PmData gyeonggi = dao.getAvrData("°æ±â");
+//		PmData gyeonggi = dao.getAvrData("ê²½ê¸°");
 //		model.addAttribute("gyeonggi",gyeonggi);
 //		
-//		PmData gangwon = dao.getAvrData("°­¿ø");
+//		PmData gangwon = dao.getAvrData("ê°•ì›");
 //		model.addAttribute("gangwon", gangwon);
 	}
 }

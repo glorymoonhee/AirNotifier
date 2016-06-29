@@ -57,18 +57,18 @@ public class PmController {
 	public String station ( HttpServletRequest req, Model model) throws UnsupportedEncodingException{
 		
 		List<String> sidos = new ArrayList<String>();
-		sidos.add("[Áö¿ª¼±ÅÃ]");
-		sidos.add("¼­¿ï");
-		sidos.add("°æ±â");
-		sidos.add("°­¿ø");
-		sidos.add("°æºÏ");
-		sidos.add("°æ³²");
-		sidos.add("ºÎ»ê");
-		sidos.add("ÀüºÏ");
+		sidos.add("[ì§€ì—­ì„ íƒ]");
+		sidos.add("ì„œìš¸");
+		sidos.add("ê²½ê¸°");
+		sidos.add("ê°•ì›");
+		sidos.add("ê²½ë¶");
+		sidos.add("ê²½ë‚¨");
+		sidos.add("ë¶€ì‚°");
+		sidos.add("ì „ë¶");
 		String sido = null;
 		
 		if(req.getParameter("sido")==null){
-			sido ="[Áö¿ª¼±ÅÃ]";
+			sido ="[ì§€ì—­ì„ íƒ]";
 		}else{
 			sido = req.getParameter("sido");
 		}
