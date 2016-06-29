@@ -7,10 +7,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.helper.HttpConnection.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +21,7 @@ import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.dao.IStationDao;
 import naver.mail.g6g6g63216.dao.IUserDao;
 import naver.mail.g6g6g63216.vo.PlaceVO;
+import naver.mail.g6g6g63216.vo.PmData;
 import naver.mail.g6g6g63216.vo.StationVO;
 import naver.mail.g6g6g63216.vo.UserVO;
 
@@ -57,7 +60,6 @@ public class PlaceController {
 
 	
 	    List<StationVO> stations = stationDao.findStationsBySido2(sido);
-	  //  System.out.println("Ω√µµ ¡∂»∏: " + stations);
 	    
 	    Map<String, Object> response = new HashMap<String, Object>(); // dictionary, dict( 1: 1)
 	    response.put("success", Boolean.TRUE);
@@ -65,6 +67,28 @@ public class PlaceController {
 	    response.put("stations", stations);
 	    
 		return response;
+	}
+	
+	@RequestMapping( value="/query/station/{stationName}", method=RequestMethod.GET)
+	public @ResponseBody Map<String, Object> infoByStation ( @PathVariable String stationName ) {
+		List<PmData> data = this.dao.queryByStation(stationName);
+		
+		System.out.println("Í≤ΩÎ°ú Î≥ÄÏàò stationName : " + stationName);
+		Map<String, Object> json = new HashMap<String, Object>();
+		/*
+		 * { success : true ,
+		 *   pmdata  : [
+		 *      { },
+		 *      { },
+		 *      { },
+		 *      ..
+		 *      { }
+		 *   ]
+		 *  }
+		 */
+		json.put("success", Boolean.TRUE);
+		json.put("pmdata", data);
+		return json ;
 	}
 	
 	@RequestMapping(value={"/station-map"}, method={RequestMethod.GET})
@@ -80,7 +104,14 @@ public class PlaceController {
 		return stations;
 	}
 	
-	
+	@RequestMapping(value="/myplaces" , method=RequestMethod.GET)
+	public String myPlaces (HttpSession session,HttpServletRequest req){
+		
+		UserVO loginUser = (UserVO) session.getAttribute("user") ;
+		List<StationVO> stations = userDao.findplaces( loginUser.getSeq());
+		req.setAttribute("stations", stations);
+		return "myplaces";
+	}
 	@RequestMapping(value="/station/register", method=RequestMethod.POST, produces="application/json" )
 	public @ResponseBody Map<String, Object> register_station_name(HttpServletRequest req, HttpSession session ) {
              
@@ -96,15 +127,15 @@ public class PlaceController {
 		
 		
 		/*
-		 * √ﬂ∞°∞° ¿ﬂ µ«æ˙¿ª¥Î
+		 * Ï∂îÍ∞ÄÍ∞Ä Ïûò ÎêòÏóàÏùÑÎåÄ
 		 * 
 		 * { success : true }
 		 * 
-		 *  Ω«∆–«ﬂ¿ª¥Î
-		 *  1. ∑Œ±◊¿Œ ¡§∫∏ æ¯¿Ω.
+		 *  Ïã§Ìå®ÌñàÏùÑÎåÄ
+		 *  1. Î°úÍ∑∏Ïù∏ Ï†ïÎ≥¥ ÏóÜÏùå.
 		 *  {success : false , cause : NO_LOGIN}
 		 *  
-		 *  2. ¿ÃπÃ √ﬂ∞°«ﬂ¿Ω.
+		 *  2. Ïù¥ÎØ∏ Ï∂îÍ∞ÄÌñàÏùå.
 		 *  {success : false, cause : ALREADY_REGITERED}
 		 *  
 		 */

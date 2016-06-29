@@ -33,23 +33,21 @@ public class StationDao implements IStationDao {
 		System.out.println("    API Key in StationDao : " + key);
 		this.apiKey = key;
 	}
+	
 	/* (non-Javadoc)
 	 * @see naver.mail.g6g6g63216.dao.IStationDao#findStationsBySido(java.lang.String)
 	 */
 	@Override
 	public List<String> findStationsBySido( String sidoName) {
 		
-		
 		System.out.println("cache miss: sending request for " + sidoName);
 		
 		String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getMsrstnList?ServiceKey=${key}&numOfRows=100&pageSize=10&pageNo=1&startPage=1&addr=${sido}";
+		uri = uri.replace("${key}", apiKey).replace("${sido}", encoding(sidoName) );
 		
-		 uri = uri.replace("${key}", apiKey).replace("${sido}", encoding(sidoName) );
-		 
-		 
 		// System.out.println("URI: " + uri);
 		 Connection con = Jsoup.connect(uri);
-		 con.timeout(30*1000); // 10ÃÊ
+		 con.timeout(30*1000); // 10ì´ˆ
 		 con.parser(Parser.xmlParser());
 		 try {
 			Document xmlDoc = con.get();
@@ -77,7 +75,7 @@ public class StationDao implements IStationDao {
 		 
 	}
 	/**
-	 * (½Ãµµ¸í, lat, lng, ÁÖ¼Ò) : VO¸¦ ¸¸µé¾î¾ß ÇÕ´Ï´Ù. 
+	 * (ì‹œë„ëª…, lat, lng, ì£¼ì†Œ) : VOë¥¼ ë§Œë“¤ì–´ì•¼ í•©ë‹ˆë‹¤. 
 	 * @param sidoName
 	 * @return
 	 */
@@ -94,7 +92,7 @@ public class StationDao implements IStationDao {
 		 
 		// System.out.println("URI: " + uri);
 		 Connection con = Jsoup.connect(uri);
-		 con.timeout(30*1000); // 10ÃÊ
+		 con.timeout(30*1000); // 10ì´ˆ
 		 con.parser(Parser.xmlParser());
 		 try {
 			Document xmlDoc = con.get();
@@ -114,7 +112,7 @@ public class StationDao implements IStationDao {
 				String addr =e.select("addr").text();
 				
 				StationVO station = new StationVO(stationName, addr, lat, lng);
-               	// statoin vo¸¦ ÇÏ³ª ¸¸µé¾î¼­ ³Ö¾îÁÜ.
+               	// statoin voë¥¼ í•˜ë‚˜ ë§Œë“¤ì–´ì„œ ë„£ì–´ì¤Œ.
 				stationNames.add(station);
 			}
 			
@@ -131,7 +129,7 @@ public class StationDao implements IStationDao {
 
 	@Override
 	public StationVO findStationsByName(String stationName) {
-		throw new RuntimeException("Not Allowed. DB¿¡¼­ Á¶È¸ÇÏ´Â ¸Ş¼ÒµåÀÌ¹Ç·Î ÀÌÂÊÀ¸·Î È£ÃâÇÏ¸é ¾ÈµÊ.");
+		throw new RuntimeException("Not Allowed. DBì—ì„œ ì¡°íšŒí•˜ëŠ” ë©”ì†Œë“œì´ë¯€ë¡œ ì´ìª½ìœ¼ë¡œ í˜¸ì¶œí•˜ë©´ ì•ˆë¨.");
 	}
 	private String encoding(String s) {
 		try {

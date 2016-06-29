@@ -44,7 +44,7 @@ public class StationCacheDao implements IStationDao {
 		
 		
 		if ( stationMap.containsKey(sidoName) ) {
-			// ÁÖ¾îÁø sidoName¿¡ ´ëÇÑ °üÃø¼Ò ¸®½ºÆ®°¡ ÀÖÀ¸¸é ±×³É ²¨³»¼­ ¹İÈ¯ÇÔ.
+			// ì£¼ì–´ì§„ sidoNameì— ëŒ€í•œ ê´€ì¸¡ì†Œ ë¦¬ìŠ¤íŠ¸ê°€ ìˆìœ¼ë©´ ê·¸ëƒ¥ êº¼ë‚´ì„œ ë°˜í™˜í•¨.
 			System.out.println("cache hit: " + sidoName);
 			List<String> list = stationMap.get(sidoName);
 			return list;
@@ -61,8 +61,8 @@ public class StationCacheDao implements IStationDao {
 		String query = "SELECT seq, station_name, station_addr, lat, lng, sido  FROM stations where sido = ?";
 
 		/*
-		 * 1. sql Äõ¸® 
-		 * 2. sql Äõ¸®ÀÇ ¹°À½Ç¥¿¡ ¼³Á¤µÉ °ªµéÀÇ Object ¹è¿­ 
+		 * 1. sql ì¿¼ë¦¬ 
+		 * 2. sql ì¿¼ë¦¬ì˜ ë¬¼ìŒí‘œì— ì„¤ì •ë  ê°’ë“¤ì˜ Object ë°°ì—´ 
 		 * 3. result set
 		 */
 		List<StationVO> stations = template.query(query, new Object[] { sidoName }, new RowMapper<StationVO>() {
@@ -104,8 +104,8 @@ public class StationCacheDao implements IStationDao {
 				
 				
 				/*
-				 *  À§°æµµ Á¤º¸°¡ ¾øÀ» ¼öµµ ÀÖ´Ù! ÀÌ»óÇÑ ³ğµéÀÌ´Ù!
-				 *  ÀÏ´Ü 0 À¸·Î ³Ö±â·Î ÇÕ´Ï´Ù.
+				 *  ìœ„ê²½ë„ ì •ë³´ê°€ ì—†ì„ ìˆ˜ë„ ìˆë‹¤! ì´ìƒí•œ ë†ˆë“¤ì´ë‹¤!
+				 *  ì¼ë‹¨ 0 ìœ¼ë¡œ ë„£ê¸°ë¡œ í•©ë‹ˆë‹¤.
 				 *  
 				 */
 				double d = 0;

@@ -1,11 +1,14 @@
 package naver.mail.g6g6g63216.dao;
 
+import java.util.List;
+
+import naver.mail.g6g6g63216.vo.PlaceVO;
 import naver.mail.g6g6g63216.vo.StationVO;
 import naver.mail.g6g6g63216.vo.UserVO;
 
 public interface IUserDao {
 	/**
-	 *  회원 가입 처리
+	 * 
 	 * @param email
 	 * @param password
 	 * @return
@@ -15,4 +18,6 @@ public interface IUserDao {
 	public UserVO findUser(String email, String pass);
 	
 	public void insertStation ( Integer userSeq, StationVO station);
+	
+	public List<StationVO> findplaces(Integer userSeq);
 }

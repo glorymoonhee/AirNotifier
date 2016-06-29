@@ -18,7 +18,7 @@ public interface IStationDao {
 	void setApiKey(String key);
 
 	/**
-	 * ½Ãµµ ÀÌ¸§À» ¹Ş¾Æ¼­ ±× Áö¿ª³»ÀÇ °üÃø¼Ò ÀÌ¸§¸¸ ¹İÈ¯ÇÕ´Ï´Ù. 
+	 * ì‹œë„ ì´ë¦„ì„ ë°›ì•„ì„œ ê·¸ ì§€ì—­ë‚´ì˜ ê´€ì¸¡ì†Œ ì´ë¦„ë§Œ ë°˜í™˜í•©ë‹ˆë‹¤. 
 	 * @param sidoName
 	 * @return
 	 */
@@ -27,7 +27,7 @@ public interface IStationDao {
 	List<StationVO> findStationsBySido2(String sidoName);
 
 	/**
-	 * ÁÖ¾îÁø °üÃø¼Ò ÀÌ¸§À¸·Î °üÃø¼­ Á¤º¸¸¦ Á¶È¸ÇÕ´Ï´Ù.
+	 * ì£¼ì–´ì§„ ê´€ì¸¡ì†Œ ì´ë¦„ìœ¼ë¡œ ê´€ì¸¡ì„œ ì •ë³´ë¥¼ ì¡°íšŒí•©ë‹ˆë‹¤.
 	 * @param stationName
 	 * @return
 	 */
