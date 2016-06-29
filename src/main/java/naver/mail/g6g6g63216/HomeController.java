@@ -72,6 +72,12 @@ public class HomeController {
 	     return "join";
 	}
 	
+	@RequestMapping(value = "/gmap", method = RequestMethod.GET)
+	public String gmap(Model model){
+		
+	     return "gmap";
+	}
+	
 	
 	@RequestMapping(value = "/doJoin", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	public @ResponseBody String doJoin(Model model, HttpServletRequest req) {
