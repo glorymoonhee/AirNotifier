@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.dao.IStationDao;
 import naver.mail.g6g6g63216.dao.IUserDao;
+import naver.mail.g6g6g63216.service.PlaceService;
 import naver.mail.g6g6g63216.vo.PlaceVO;
 import naver.mail.g6g6g63216.vo.PmData;
 import naver.mail.g6g6g63216.vo.StationVO;
@@ -38,6 +39,9 @@ public class PlaceController {
 	
 	@Autowired
 	private IUserDao userDao ;
+	
+	@Autowired
+	private PlaceService placeService ;
 	
 	public void setDao ( IPmDao pmDao) {
 		//System.out.println("[pm dao in PlaceController] " + pmDao);
@@ -69,8 +73,16 @@ public class PlaceController {
 		return response;
 	}
 	
+	
+	
+
+	
+	
+	
 	@RequestMapping( value="/query/station/{stationName}", method=RequestMethod.GET)
 	public @ResponseBody Map<String, Object> infoByStation ( @PathVariable String stationName ) {
+		
+		
 		List<PmData> data = this.dao.queryByStation(stationName);
 		
 		System.out.println("경로 변수 stationName : " + stationName);
@@ -112,6 +124,31 @@ public class PlaceController {
 		req.setAttribute("stations", stations);
 		return "myplaces";
 	}
+	
+	
+	@RequestMapping(value="/nearest/{cnt}/{lat:.+}/{lng:.+}" , method=RequestMethod.GET)
+	public @ResponseBody Map<String, Object> nearest (@PathVariable int cnt, @PathVariable double lat , @PathVariable double lng){
+		
+		System.out.println(cnt + ", " + lat + ", " + lng);
+		List<StationVO> stations = placeService.getNearest(lat, lng, cnt);
+		System.out.println(stations);
+		
+		/*
+		 *  {
+		 *    success : true,
+		 *    nearest : [{ddddd}, {dddd} ]
+		 *  }
+		 */
+		Map<String, Object> resp = new HashMap<String, Object>();
+		resp.put("success", true );
+		resp.put("nearest", stations);
+		return resp ;
+		
+		
+//		return stations;
+	}
+	
+	
 	@RequestMapping(value="/station/register", method=RequestMethod.POST, produces="application/json" )
 	public @ResponseBody Map<String, Object> register_station_name(HttpServletRequest req, HttpSession session ) {
              

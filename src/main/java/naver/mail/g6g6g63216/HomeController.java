@@ -79,6 +79,10 @@ public class HomeController {
 	}
 	
 	
+	
+	
+	
+	
 	@RequestMapping(value = "/doJoin", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	public @ResponseBody String doJoin(Model model, HttpServletRequest req) {
 	     String email = req.getParameter("email");
@@ -113,6 +117,21 @@ public class HomeController {
 	     
 	     return "{\"success\": true}";
 	}
+	
+	
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(Model model, HttpSession session){
+		
+		session.invalidate();
+		
+	     return "redirect:/";
+	}
+	
+	
+	
+	
+	
 	
 	private List<String> sidoNames = Arrays.asList("서울", "경기", "강원", "전남", "전북", "경남" , "경북", "충남", "충북");
 	private void readPmData(Model model) {

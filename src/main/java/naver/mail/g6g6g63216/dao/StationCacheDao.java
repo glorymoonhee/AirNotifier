@@ -152,6 +152,28 @@ public class StationCacheDao implements IStationDao {
 		
 		return vo;
 	}
+
+	@Override
+	public List<StationVO> findAllstations() {
+		String query = "select seq, station_name, station_addr, lat, lng, sido from stations";
+		List<StationVO> vo  = template.query(query, new RowMapper<StationVO>() {
+
+			@Override
+			public StationVO mapRow(ResultSet rs, int rownum) throws SQLException {
+				int num = rs.getInt("seq");
+				String name = rs.getString("station_name");
+				String addr = rs.getString("station_addr");
+				String lat = rs.getString("lat");
+				String lng = rs.getString("lng");
+				
+				StationVO station = new StationVO(num, name, addr, lat, lng);
+				return station;
+			}
+			
+		});
+		
+		return vo;
+	}
 	
 	
 

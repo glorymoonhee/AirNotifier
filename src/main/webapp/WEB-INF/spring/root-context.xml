@@ -49,6 +49,10 @@
 	 
 	 </bean>
 	 
+	<bean id="PlaceService" class="naver.mail.g6g6g63216.service.PlaceService">
+		<property name="stationDao" ref="proxyStation"></property>     
+	</bean>
+	 
 	 <bean id="userdao" class="naver.mail.g6g6g63216.dao.UserDao">
 	  <property name="tpl" ref="tpl"></property>
 	 </bean>

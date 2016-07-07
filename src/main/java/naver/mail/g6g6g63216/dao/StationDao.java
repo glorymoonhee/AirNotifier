@@ -139,4 +139,9 @@ public class StationDao implements IStationDao {
 			return s;
 		}
 	}
+
+	@Override
+	public List<StationVO> findAllstations() {
+		throw new RuntimeException("Not Allowed. DB에서 조회하는 메소드이므로 이쪽으로 호출하면 안됨.");
+	}
 }
