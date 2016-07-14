@@ -102,6 +102,13 @@ public class HomeController {
 	}
 	
 	
+	@RequestMapping(value = "/graph", method = RequestMethod.GET)
+    public String Graph(Model model){
+		
+		return "graph";
+	}
+	
+	
 	@RequestMapping(value = "/doLogin", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	public @ResponseBody String dologin(Model model, HttpServletRequest req, HttpSession session){
 	     String email = req.getParameter("email");

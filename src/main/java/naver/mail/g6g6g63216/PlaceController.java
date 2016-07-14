@@ -82,7 +82,6 @@ public class PlaceController {
 	@RequestMapping( value="/query/station/{stationName}", method=RequestMethod.GET)
 	public @ResponseBody Map<String, Object> infoByStation ( @PathVariable String stationName ) {
 		
-		
 		List<PmData> data = this.dao.queryByStation(stationName);
 		
 		System.out.println("경로 변수 stationName : " + stationName);
@@ -99,6 +98,7 @@ public class PlaceController {
 		 *  }
 		 */
 		json.put("success", Boolean.TRUE);
+		json.put("station", stationName);
 		json.put("pmdata", data);
 		return json ;
 	}
@@ -125,6 +125,7 @@ public class PlaceController {
 		return "myplaces";
 	}
 	
+
 	
 	@RequestMapping(value="/nearest/{cnt}/{lat:.+}/{lng:.+}" , method=RequestMethod.GET)
 	public @ResponseBody Map<String, Object> nearest (@PathVariable int cnt, @PathVariable double lat , @PathVariable double lng){

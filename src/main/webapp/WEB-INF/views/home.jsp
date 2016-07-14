@@ -4,6 +4,7 @@
 <html>
 <head>
 	<title>Home</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
  
  <style type="text/css">
@@ -195,7 +196,7 @@ $(document).ready ( function() {
 		
 		<c:forEach var="data" items="${sidoData}" >
            <div class="panel panel-success col-sm-3">
-           <div class="panel-heading">${sidoMap[data] }</div>
+           <div class="panel-heading">${sidoMap[data] } <button class="ddd">${sidoMap[data]}</button></div>
            <div class="panel-body"> 
            	<div>PM10 : ${data.pm100} (${data.pm100Grade}등급) </div>
 			<div>PM2.5 : ${data.pm025}(${data.pm025Grade}등급)</div>

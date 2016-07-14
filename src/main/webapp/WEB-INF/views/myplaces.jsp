@@ -5,22 +5,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>로그인</title>
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 var ctxpath = '<%=application.getContextPath()%>';
+var pmdata =  { }; // new HashMap(); 
 
+/*
+ * ${stations}
+ * 
+ @param stationName String 
+ @param pmdata      Array, 
+ */
 function drawChart (stationName, pmdata ) {
 	
 	google.charts.setOnLoadCallback( function() {
 		
 		var dataSource = [];
-		dataSource.push ( ['Time', 'PM 10', 'PM 2.5'] );
+		dataSource.push ( ['Time', 'PM 10'] );
 		for ( var i = pmdata.length - 1 ; i >= 0 ; i -- ) {
 			var pm = pmdata[i];
 			// 2016-03-20 11:00:00
-			var arr = [ pm.dataTime.substring(8), parseInt(pm.pm100), parseInt ( pm.pm25 ) ];
+			var arr = [ pm.dataTime.substring(8), parseInt(pm.pm100) ];
 			dataSource.push ( arr );
 			
 		}
@@ -40,18 +48,119 @@ function drawChart (stationName, pmdata ) {
 	 
 	
 }
+ 
+ function drawChartAll ( dataMap ) {
+	var dataSource = [];
+	/* Set<String> keys = map.keySet();
+	 * {
+		 {key0, val0),
+		 {key1, val1}
+		 }
+		 amp.get(key);
+	   }
+	 * for ( String key : keys ) {
+		 
+	 }
+	 */
+	 
+	var region = ['Time'];
+	for(var station in dataMap){
+		 region.push(station);
+	}
+	dataSource.push ( region );
+	
+	for( var i = 25 - 1 ; i >= 0 ; i --  ){
+		console.log('prop: ', station);
+		var data = dataMap [ station ]; //25개 각 station의 배열
+		// 2016-07-13 15:00 8~13
+		var arr = [ data[i].dataTime.substring(8,10) + '일 ' +  data[i].dataTime.substring(11,13) + '시'] ;// each row
+		for(var station in dataMap){
+			var s = dataMap[station];
+			arr.push(parseFloat(s[i].pm100));
+		}
+		
+		dataSource.push ( arr );
+		
+	}
+	/*
+	dataSource.push ( ['Time', 'PM 10'] );
+	for ( var i = pmdata.length - 1 ; i >= 0 ; i -- ) {
+		var pm = pmdata[i];
+		// 2016-03-20 11:00:00
+		var arr = [ pm.dataTime.substring(8), parseInt(pm.pm100) ];
+		dataSource.push ( arr );
+		
+	}
+	*/
+	 
+		google.charts.setOnLoadCallback( function() {
+			
+			var data = google.visualization.arrayToDataTable(dataSource );
+			
+			var options = {
+					// width : ????????, 
+			          title: 'PM 수치',
+			          curveType: 'function',
+			          legend: { position: 'bottom' }
+			};
+			var chart = new google.visualization.LineChart(document.getElementById('pm_chart'));
+			chart.draw(data, options);
+		});
+		
+		 
+		
+	}
+
 $(document).ready ( function(){
+	
+	var stations = '${stations}' ;
+	console.log ('나와라',  stations );
+	
 	google.charts.load('current', {'packages':['corechart']});
+	var stationName ;
+	$('#place_all').click(function(){
+		
+		drawChartAll(pmdata) ;
+	});
+	
 	$('.place').click(function(e){
-		var stationName = $(this).text() ;
-		// /query/station/수내동
+		stationName = $(this).text() ;
+		console.log ( stationName );
+		drawChart ( stationName,  pmdata[stationName] ); // pmdata.get(stationName);
+	
+	});
+	
+	/*
+	 * hoisting : 끌어올리기
+	 */
+	
+	var ap = $('.place');
+	var stationName ;
+	var tmp ;
+	for ( var i = 0 ; i < ap.length ; i++ ) {
+		stationName = $(ap[i]).text() ;
+		tmp = stationName ;
 		var url = ctxpath + '/query/station/' + stationName ;
-		$.get(url,  function( resp ){
+		/*
+		 * 요청을 보내는 시점과 응답이 오는 시점은 우리가 통제할 수 없음.
+		 * 그런데 이미 코드상에서 closure와 hoisting으로 stationName이 배열의 맨 마지막 값으로 fix되어버리고
+		 * 응답이 들어옴.
+		 */
+		$.get( url,  function( resp ){
 			console.log ( resp );
-			drawChart (stationName, resp.pmdata );
+			pmdata[ resp.station ] = resp.pmdata ; 
+			/*
+			(function (sn, data) {
+				pmdata[ sn ] = data ; // pmdata.put(stationName, data );
+			})( resp.station, resp.pmdata);
+			*/
 			
 		});
-	});
+	}
+	
+	
+	
+
 });
 </script>
 </head>
@@ -67,10 +176,11 @@ $(document).ready ( function(){
 			} 
 			 -->
 			 
-             <c:forEach items="${stations}" var="s" >
-             	<span class="btn btn-primary place">${ s.name }</span>
+             <c:forEach items="${stations}" var="s" varStatus="vs">
+             	<span id="place${vs.index}" class="btn btn-primary place">${ s.name }</span>
+            	
              </c:forEach>
-
+              <button id="place_all">전체보기</button>
 		</div>
 	</div>
 	<div class="row">
