@@ -36,10 +36,17 @@ function drawChart (stationName, pmdata ) {
 		var data = google.visualization.arrayToDataTable(dataSource );
 		
 		var options = {
-				// width : ????????, 
-		          title: stationName,
+				width: '100%',
+				height: 500,
+		          title: 'PM 수치',
 		          curveType: 'function',
-		          legend: { position: 'bottom' }
+		          legend: { position: 'bottom' },
+		          chartArea : {
+						left : 40,
+						top : 20,
+						width: '90%',
+						height: '80%'
+					}
 		};
 		var chart = new google.visualization.LineChart(document.getElementById('pm_chart'));
 		chart.draw(data, options);
@@ -98,10 +105,17 @@ function drawChart (stationName, pmdata ) {
 			var data = google.visualization.arrayToDataTable(dataSource );
 			
 			var options = {
-					// width : ????????, 
+					width: '100%',
+					height: 500,
 			          title: 'PM 수치',
 			          curveType: 'function',
-			          legend: { position: 'bottom' }
+			          legend: { position: 'bottom' },
+			          chartArea : {
+							left : 40,
+							top : 20,
+							width: '90%',
+							height: '80%'
+						}
 			};
 			var chart = new google.visualization.LineChart(document.getElementById('pm_chart'));
 			chart.draw(data, options);
@@ -185,7 +199,7 @@ $(document).ready ( function(){
 	</div>
 	<div class="row">
 		<div class="col-xs-12">
-			<div id="pm_chart" style="height:500px;"></div>
+			<div id="pm_chart"></div>
 		</div>
 	</div>
 </div>

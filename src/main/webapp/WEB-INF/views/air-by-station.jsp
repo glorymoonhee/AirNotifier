@@ -5,7 +5,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>시도별 관측</title>
 <link rel="stylesheet" type="text/css" href="<%=application.getContextPath() %>/resources/css/bootstrap.css" />
 <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/jquery-1.12.0.js"></script> 
 <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/bootstrap.js"></script>

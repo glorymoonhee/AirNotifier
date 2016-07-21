@@ -6,7 +6,7 @@
 	<title>Home</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
- 
+ <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/vticker.min.js"></script>
  <style type="text/css">
 html, body {
 	height: 100%;
@@ -85,6 +85,17 @@ function initMap() {
 			infoWindow.setPosition(pos);
 			infoWindow.setContent('현재 위치'); //현재위치  확인
 			map.setCenter(pos);
+			topKStation();
+			
+			map.addListener('dragend', function() {
+			    // 3 seconds after the center of the map has changed, pan back to the
+			    // marker.
+				topKStation();
+			  });
+
+			
+			
+			
 		}, function() {
 			handleLocationError(true, infoWindow, map.getCenter());
 		});
@@ -92,32 +103,7 @@ function initMap() {
 		// Browser doesn't support Geolocation
 		handleLocationError(false, infoWindow, map.getCenter());
 	}
-	
-	var param = {sido: '경기'};
-	// /query/stations?sido=경기
-	/*
-	$.get( '<%=request.getContextPath()%>'+'/query/stations', param , function(resp ){
 		
-		console.log ( resp.stations );
-		var marker ; 
-		for(var i = 0; i<resp.stations.length; i++){
-			
-			var pos = {lat: parseFloat(resp.stations[i].lat), lng: parseFloat(resp.stations[i].lng)};
-			
-			marker = new google.maps.Marker({
-			    position: pos,
-			    map: map,
-			    title: resp.stations[i].name
-			    
-			});	
-			// closure 를 피하기 위해서 marker의 참조를 복사해서 넘겨줍니다.
-			// 안에서는 특정 marekr에 이벤트 리스너를 등록하게 됩니다.
-			addMarkerListener ( marker, resp.stations[i], infoWindow );
-			
-		}
-		
-	});
-	*/
 
 	
 	
@@ -131,48 +117,61 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 	}
 	
 	
-$(document).ready ( function() {
-	$('#btnCurLoc').click ( function(){
-		var center = map.getCenter();
-		// url/333
-		var url = ctxpath + '/nearest/3/{0}/{1}';
-		url = url.replace('{0}', center.lat())
-		         .replace('{1}', center.lng());
-		
-		console.log ( url );
-		
-		$.get(url, function(resp){
-		
-			if ( resp.success ) {
-				
-				for ( var i = 0 ; i < markers.length ; i++ ) {
-					markers[i].setMap ( null );
-				}
-				markers = [] ;
-				
-				var stations = resp.nearest;
-				var bnd = new google.maps.LatLngBounds();
-				
-				for( var i = 0; i < stations.length; i ++){
-					
-					var pos = {lat: parseFloat(stations[i].lat), lng: parseFloat(stations[i].lng)};
-					var marker = new google.maps.Marker({
-					    position: pos,
-					    map: map,
-					    title: stations[i].name
-					});
-					markers.push ( marker );
-					addMarkerListener ( marker, stations[i], infoWindow );
-					bnd.extend ( marker.getPosition() );
-				}
-				
-				map.fitBounds ( bnd );
-				
-				
+	
+function topKStation (){
+	var center = map.getCenter();
+	// url/333
+	var url = ctxpath + '/nearest/3/{0}/{1}';
+	url = url.replace('{0}', center.lat())
+	         .replace('{1}', center.lng());
+	
+	console.log ( url );
+	
+	$.get(url, function(resp){
+	
+		if ( resp.success ) {
+			
+			for ( var i = 0 ; i < markers.length ; i++ ) {
+				markers[i].setMap ( null );
 			}
-		});
-		
+			markers = [] ;
+			
+			var stations = resp.nearest;
+			var bnd = new google.maps.LatLngBounds();
+			
+			for( var i = 0; i < stations.length; i ++){
+				
+				var pos = {lat: parseFloat(stations[i].lat), lng: parseFloat(stations[i].lng)};
+				var marker = new google.maps.Marker({
+				    position: pos,
+				    map: map,
+				    title: stations[i].name
+				});
+				markers.push ( marker );
+				addMarkerListener ( marker, stations[i], infoWindow );
+				bnd.extend ( marker.getPosition() );
+			}
+			
+			map.fitBounds ( bnd );
+			
+			
+		}
 	});
+	
+}
+	
+$(document).ready ( function() {
+      
+	
+	 $('#example').vTicker('init', {
+		    speed: 400, 
+		    pause: 1000,
+		    showItems: 2,
+		    padding: 4
+		  });
+	
+	
+	
 });
 	
 </script>
@@ -189,11 +188,22 @@ $(document).ready ( function() {
 		</div>
 	</div>
 	
-	<div class="row">
+	<div class="row" >
 		<!-- 그리스 시스템 : http://bootstrapk.com/css/#grid -->
 		
+		 <div id ="example">
 		
+		<ul>
+		   <c:forEach var="data" items="${sidoData}" >
+		   
+		       <li>${sidoMap[data]} PM10 : ${data.pm100} (${data.pm100Grade}등급)  PM2.5 : ${data.pm025}(${data.pm025Grade}등급)</li>
+		       
+		       
+		   </c:forEach>
+	 	</ul>
 		
+		</div>
+		<%-- 
 		<c:forEach var="data" items="${sidoData}" >
            <div class="panel panel-success col-sm-3">
            <div class="panel-heading">${sidoMap[data] } <button class="ddd">${sidoMap[data]}</button></div>
@@ -203,7 +213,7 @@ $(document).ready ( function() {
              </div>
            </div>
            
-		</c:forEach>
+		</c:forEach> --%>
 	</div>
 </div>
 </body>

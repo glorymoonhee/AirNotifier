@@ -1,5 +1,6 @@
 package naver.mail.g6g6g63216.service;
 
+import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import naver.mail.g6g6g63216.dao.IUserDao;
+import naver.mail.g6g6g63216.vo.PmData;
+import naver.mail.g6g6g63216.vo.StationVO;
 import naver.mail.g6g6g63216.vo.UserVO;
 
 @Service
@@ -27,23 +30,46 @@ public class UserService {
 	
 	public UserVO insertUser ( String email, String password) {
 		UserVO user = userDao.insertUser(email, password);
-		// FIXME µ¿±â ¹æ½ÄÀ¸·Î ¸ŞÀÏÀ» Àü¼ÛÇÏ´Âµ¥ ¸ŞÀÏ ¼­¹ö¿¡¼­ ÀÀ´äÀÌ ¿Ã¶§±îÁö block µÇ¾î¼­ À¥¼­¹ö ¼º´ÉÀÌ ±Ø¾ÇÀ¸·Î ¶³¾îÁü.
-		//       ºñµ¿±â ¹æ½ÄÀ¸·Î ¸ŞÀÏ Àü¼ÛÇÏ´Â ÄÚµå¸¦ ³ªÁÖ¿¨ ³Ö¾îÁà¾ß ÇÕ´Ï´Ù.
-		sendEmail ( user.getEmail(), "<h3>hi</h3>" );
+		// FIXME ë™ê¸° ë°©ì‹ìœ¼ë¡œ ë©”ì¼ì„ ì „ì†¡í•˜ëŠ”ë° ë©”ì¼ ì„œë²„ì—ì„œ ì‘ë‹µì´ ì˜¬ë•Œê¹Œì§€ block ë˜ì–´ì„œ ì›¹ì„œë²„ ì„±ëŠ¥ì´ ê·¹ì•…ìœ¼ë¡œ ë–¨ì–´ì§.
+		//       ë¹„ë™ê¸° ë°©ì‹ìœ¼ë¡œ ë©”ì¼ ì „ì†¡í•˜ëŠ” ì½”ë“œë¥¼ ë‚˜ì£¼ì—¥ ë„£ì–´ì¤˜ì•¼ í•©ë‹ˆë‹¤.
+//		sendEmail ( user.getEmail(), "<h3>ìˆ˜ë‚´ë™ 11ì‹œ</h3>" );
 		
 		return user;
 	}
+	
 	/**
-	 * È¸¿ø °¡ÀÔ ¾Ë¸®´Â ¸ŞÀÏ ¹ß¼ÛÇÕ´Ï´Ù.
-	 * @param email
+	 *  ìˆ˜ì‹ ì : email
+	 *  ì¥ì†Œ(station) : 
+	 *  ì‹œê°„ ( time ):
+	 *  pmdata ( )
+	 * 
+	 *    userService.sendEmail( "ddd@naver.com", StationVO station, String time, List<Pmdata> data ) ;
 	 */
-	public void sendEmail(String email, String htmlTemplate) {
+	public void sendPmNotification (String host, String receiver, StationVO station, PmData data) {
+		String template = "<h3><a href=\"{host}/air/pm/station?sido={sido}&name={station}\">{station} - {time}ì‹œ </a></h3><div>PM 10 : {pm100}</div><div>PM 2.5 : {pm025}</div>" ;
+		
+		
+		String sido = station.getAddr().substring(0, 2);
+		String html = template.replace("{station}", station.getName())
+		                  .replace("{time}", data.getDataTime())
+		                  .replace("{pm100}",data.getPm100())
+		                  .replace("{pm025}",data.getPm025())
+		                  .replace("{host}", host)
+		                  .replace("{sido}", sido);
+		sendEmail(receiver, "ë¯¸ì„¸ë¨¼ì§€ ì •ë³´", html);
+	}
+	/**
+	 * íšŒì› ê°€ì… ì•Œë¦¬ëŠ” ë©”ì¼ ë°œì†¡í•©ë‹ˆë‹¤.
+	 * @param receiver
+	 */
+	public void sendEmail(String receiver, String title, String htmlTemplate) {
 		// TODO Auto-generated method stub
+		
 		 final String gmailAccount = "no.rep.for.javatuition@gmail.com";
 	        final String password = "s123456789$";
 
-	        String receiver = "happy_medium@naver.com";
-	        String title = "Å×½ºÆ® ¸ŞÀÏ Àü¼ÛÇÕ´Ï´Ù.";
+//	        String receiver = "happy_medium@naver.com";
+//	        String title = "í…ŒìŠ¤íŠ¸ ë©”ì¼ ì „ì†¡í•©ë‹ˆë‹¤.";
 
 	        Properties props = new Properties();
 	        props.put("mail.smtp.auth", "true");
@@ -72,8 +98,7 @@ public class UserService {
 	            msg.setContent(bodyPart);
 
 	            msg.setFrom(new InternetAddress(gmailAccount));
-	            msg.addRecipient(Message.RecipientType.TO, new InternetAddress("happy_medium@naver.com"));
-	            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+	            msg.addRecipient(Message.RecipientType.TO, new InternetAddress(receiver));
 	            Transport.send(msg);
 //	            
 //	            Transport transport= session.getTransport("smtps");

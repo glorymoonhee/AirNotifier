@@ -2,16 +2,27 @@ package naver.mail.g6g6g63216;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import naver.mail.g6g6g63216.service.UserService;
+import naver.mail.g6g6g63216.vo.PmData;
+import naver.mail.g6g6g63216.vo.StationVO;
 
 public class TestMailSender {
 
 	@Test
 	public void test() {
 		UserService us = new UserService();
-		us.sendEmail("g6g6g63216@naver.com", "<h3>¸ŞÀÏ º»¹® ÅÛÇÃ¸´ÀÔ´Ï´Ù.</h3>");
+//		us.sendEmail("g6g6g63216@naver.com", "<h3>ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½Ô´Ï´ï¿½.</h3>");
+		
+		StationVO s = new StationVO("ìˆ˜ë‚´ë™", "ê²½ê¸°ë„ ìˆ˜ë‚´ë™", "23.222", "123.111");
+		
+		List<PmData> data = new ArrayList<PmData>();
+		data.add(new PmData("56", 2, "32", 1, "2016-07-19 11:00:00"));
+		us.sendPmNotification("http://localhost:8080", "g6g6g63216@naver.com", s,  data.get(0));
 	}
 
 }
