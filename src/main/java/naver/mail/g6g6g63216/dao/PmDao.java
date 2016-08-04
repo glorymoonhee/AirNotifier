@@ -108,6 +108,9 @@ public class PmDao implements IPmDao, ApiKeySpec {
 				}
 	   }
 	    System.out.println("avr pm 10 grade : " + grade10 + ", " + grade25);
+	    count10 = ( count10 == 0 ? 1 : count10);
+	    count25 = ( count25 == 0 ? 1 : count25);
+	    
 	    int avgPM10 = sum10/count10;
 	    int avgPM25 = sum25/count25;
 	    int avrPM10Grade = (int) (grade10/count10); 
@@ -132,6 +135,7 @@ public class PmDao implements IPmDao, ApiKeySpec {
 		try {
 			uri = uri.replace("${sido}", URLEncoder.encode(sido, "utf-8"))
 					 .replace("${key}", this.apiKey);
+			System.out.println("[" + sido + "] " + uri);
 			org.jsoup.Connection con = Jsoup.connect(uri);
 			con.parser(Parser.xmlParser());
 			con.timeout(20*1000);
