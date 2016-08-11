@@ -31,6 +31,7 @@ import naver.mail.g6g6g63216.vo.PmData;
 public class PmDao implements IPmDao, ApiKeySpec {
 
 
+	@Autowired(required=true)
 	private JdbcTemplate template;
 	
 	@Value("${apikey}")
@@ -39,12 +40,14 @@ public class PmDao implements IPmDao, ApiKeySpec {
 	/* (non-Javadoc)
 	 * @see naver.mail.g6g6g63216.dao.IPmDao#setJdbcTemplate(org.springframework.jdbc.core.JdbcTemplate)
 	 */
+	/*
 	@Override
 	public void setJdbcTemplate ( JdbcTemplate template) {
 		
 		System.out.println(this);
 		this.template = template;
 	}
+	*/
 	
 	/* (non-Javadoc)
 	 * @see naver.mail.g6g6g63216.dao.IPmDao#getApiKey()
@@ -165,6 +168,32 @@ public class PmDao implements IPmDao, ApiKeySpec {
 		}
 		
 		
+	}
+	
+	@Override
+	public String getRawPmData( String sido ) {
+		String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc"
+				+ "/getCtprvnRltmMesureDnsty?"
+				+ "ServiceKey=${key}&"
+				+ "numOfRows=100&pageSize=50&pageNo=1&startPage=1&"
+				+ "sidoName=${sido}"
+		        + "&ver=1.0";
+		
+		try {
+			uri = uri.replace("${sido}", URLEncoder.encode(sido, "utf-8"))
+					 .replace("${key}", this.apiKey);
+			System.out.println("[" + sido + "] " + uri);
+			org.jsoup.Connection con = Jsoup.connect(uri);
+			con.parser(Parser.xmlParser());
+			con.timeout(5*1000);
+			Document xmlDoc = con.get();
+			return xmlDoc.toString();
+			
+		} catch ( UnsupportedEncodingException e) {
+			throw new RuntimeException ( e );
+		} catch (IOException e) {
+			throw new APICallException ( e );
+		}
 	}
 	/* (non-Javadoc)
 	 * @see naver.mail.g6g6g63216.dao.IPmDao#queryByStation(java.lang.String)

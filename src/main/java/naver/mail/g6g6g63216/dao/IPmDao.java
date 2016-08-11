@@ -10,7 +10,7 @@ import naver.mail.g6g6g63216.vo.PmData;
 
 public interface IPmDao {
 
-	void setJdbcTemplate(JdbcTemplate template);
+//	void setJdbcTemplate(JdbcTemplate template);
 
 //	String getApiKey();
 //
@@ -34,5 +34,12 @@ public interface IPmDao {
 	List<PmData> queryByStation(String stationName);
 
 	List<PlaceVO> findAllPlaces();
+
+	/**
+	 * 주어진 시도의 pm 정보를 담고 있는 xml 문자열을 그대로 반환함.
+	 * @param sido
+	 * @return
+	 */
+	String getRawPmData(String sido);
 
 }

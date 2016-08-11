@@ -64,12 +64,33 @@
 	<bean id="pmDao" class="naver.mail.g6g6g63216.dao.PmDao">
 		<qualifier value="remotePM"/>
 		<!-- <property name="apiKey" value="${apikey}"></property> -->
-		<property name="jdbcTemplate" ref="tpl"></property>
+		<!-- <property name="jdbcTemplate" ref="tpl"></property> -->
 	</bean>
 	
 	<bean id="cachepmDao" class="naver.mail.g6g6g63216.dao.CachePmDao">	  
 		<qualifier value="cachedPM"/>  
 	</bean>
+        
+        
+        
+        <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> 
+        <property name="port" value="${mail.port}"></property> 
+        <property name="host" value="${mail.host}"></property> 
+        <property name="username" value="${mail.user}"></property> 
+        <property name="password" value="${mail.password}"></property> 
+        <property name="defaultEncoding" value="utf8"></property> 
+        <property name="javaMailProperties"> 
+            <props> 
+                <prop key="mail.smtp.starttls.enable">true</prop> 
+                <prop key="mail.smtp.auth">true</prop> 
+            </props> 
+        </property> 
+
+    </bean>
+        
+        
+        
+        
         
     <context:component-scan base-package="naver.mail.g6g6g63216.dao, naver.mail.g6g6g63216.service" />
 

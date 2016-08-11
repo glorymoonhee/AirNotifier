@@ -20,10 +20,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import naver.mail.g6g6g63216.dao.APICallException;
 import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.service.UserService;
 import naver.mail.g6g6g63216.vo.PmData;
@@ -163,5 +165,10 @@ public class HomeController {
 //		
 //		PmData gangwon = dao.getAvrData("강원");
 //		model.addAttribute("gangwon", gangwon);
+	}
+	
+	@ExceptionHandler(APICallException.class) 
+	public String handlAPIException (APICallException e) {
+		throw e;
 	}
 }
