@@ -35,7 +35,11 @@
 	 
 	
 		
-	<context:component-scan base-package="naver.mail.g6g6g63216" />
+	<context:component-scan base-package="naver.mail.g6g6g63216" >
+	<!--  .dao. -->
+		<context:exclude-filter type="regex" expression=".+\.dao\..+"/>
+		<context:exclude-filter type="regex" expression=".+\.service\..+"/>
+	</context:component-scan>
 	
 	
 	
