@@ -144,9 +144,20 @@ $(document).ready ( function(){
 	
 	});
 	
-	/*
-	 * hoisting : 끌어올리기
-	 */
+	  $(".dropdown-menu li a").click(function(){
+	  var url = '<%=request.getContextPath()%>/DeleteUserStation';
+	 
+	  var station_name = {station_name: ($(this).text())};
+	  var btnId = $(this).data('btnid');
+	
+		$.post(url ,station_name , function(res){
+			if ( res.success ) {
+			
+				console.log('delete 성공');
+				$('#' + btnId).remove();
+			}
+		});
+	});
 	
 	var ap = $('.place');
 	var stationName ;
@@ -189,12 +200,31 @@ $(document).ready ( function(){
 				s.getSeq();
 			} 
 			 -->
-			 
+			 <div id="places">
              <c:forEach items="${stations}" var="s" varStatus="vs">
              	<span id="place${vs.index}" class="btn btn-primary place">${ s.name }</span>
             	
              </c:forEach>
+			 </div>
               <button id="place_all">전체보기</button>
+              <!-- 버튼그룹시작 -->
+              
+              <div class="btn-group">
+    <button class="btn">삭제할 항목</button>
+    <button class="btn dropdown-toggle" data-toggle="dropdown">
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+
+       <c:forEach items="${stations}" var="s" varStatus="vs">
+             
+            	  <li><a tabindex="-1"  data-btnid="place${vs.index}">${ s.name }</a></li>
+             </c:forEach>
+     
+    </ul>
+</div>
+
+            <!--  버튼그룹끝 -->
 		</div>
 	</div>
 	<div class="row">

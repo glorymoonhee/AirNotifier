@@ -14,10 +14,11 @@ public interface IUserDao {
 	 * @return
 	 */
 	public UserVO insertUser ( String email, String password);
-
+	public int updateUser ( String email, String password);
 	public UserVO findUser(String email, String pass);
 	
 	public void insertStation ( Integer userSeq, StationVO station);
+	public void deleteStation (String station_name);
 	
 	public List<StationVO> findplaces(Integer userSeq);
 }

@@ -25,7 +25,7 @@ public class UserDao implements IUserDao {
 		this.template = template;
 	}
 	@Override
-	public UserVO insertUser(final String email, final String password) {
+	public UserVO insertUser(final String email, final String password) { //왜 final 인지 
 		
 		final String query ="insert into users (email,pass) values (?, ?)";
 		
@@ -41,13 +41,26 @@ public class UserDao implements IUserDao {
 		};
 		
 		KeyHolder holder = new GeneratedKeyHolder();
-		template.update(psc, holder); // ������ ���� ���� �� seq���� ���ͼ� holder�� �־��ݴϴ�.
+		template.update(psc, holder); 
+		
 		Integer seq = holder.getKey().intValue();
 		
 		UserVO user = new UserVO( seq, email, password);
 		return user ;
 	}
 	
+	
+	@Override
+	public int updateUser(String email,String pass){ //
+		
+		System.out.println(email);
+		System.out.println(pass);
+		 String query = "update users set pass = ? where email= ?";
+		int n =  template.update(query, pass,email);
+		 
+		return n;
+	
+	}
 	@Override
 	public UserVO findUser(String email, String pass) {
         String query = "select seq,email,pass from users where email=? and pass = ?";
@@ -68,6 +81,14 @@ public class UserDao implements IUserDao {
 		String query = "insert into user_station (user,station ) values (?,?)";
 		int nInsert = template.update(query, new Object[]{userSeq,station.getSeq()});
 		System.out.println("inserted new stations : " + nInsert);
+		
+	}
+	
+	@Override
+	public void deleteStation(String station_name) {
+		   System.out.println("userdao" + station_name);
+		String query = "delete from user_station where station in (select seq from stations where station_name = ?)";
+	     template.update(query, new Object[]{station_name});
 		
 	}
 	
@@ -109,4 +130,10 @@ public class UserDao implements IUserDao {
 		List<StationVO> stations = template.query(query, args, rowMapper);
 		return stations;
 	}
+
+	      
+	
+	
+	
+	
 }

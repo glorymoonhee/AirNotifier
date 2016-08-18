@@ -107,9 +107,49 @@ $(document).ready( function() {
   	<th scope="row"></th>
   	<td>${i.dataTime}</td>  
        <td>${i.pm100}ppm</td> 
-       <td>(${i.pm100Grade }등급)</td> 
+
+          <c:set var="grade100" value="${i.pm100Grade}" />
+            <c:choose>
+    <c:when test="${grade100 eq 1}">
+         <td>좋음</td>
+    </c:when>
+    <c:when test="${grade100 eq 2}">
+         <td>보통</td>
+    </c:when>
+      <c:when test="${grade100 eq 3}">
+         <td>나쁨</td>
+    </c:when>
+      <c:when test="${grade100 eq 4}">
+         <td>매우나쁨</td>
+          <c:otherwise>
+           <td>--</td>
+        </c:otherwise>
+    </c:when>
+  
+       </c:choose> 
+
+        
         <td>${i.pm025}ppm</td> 
-        <td>(${i.pm025Grade }등급)</td> </tr>
+     
+          <c:set var="grade25" value="${i.pm025Grade}" />
+            <c:choose>
+    <c:when test="${grade25 eq 1}">
+         <td>좋음</td>
+    </c:when>
+    <c:when test="${grade25 eq 2}">
+         <td>보통</td>
+    </c:when>
+      <c:when test="${grade25 eq 3}">
+         <td>나쁨</td>
+    </c:when>
+      <c:when test="${grade25 eq 4}">
+         <td>매우나쁨</td>
+          <c:otherwise>
+           <td>--</td>
+        </c:otherwise>
+    </c:when>
+  
+       </c:choose> 
  </c:forEach>
  </tbody>
  </table>

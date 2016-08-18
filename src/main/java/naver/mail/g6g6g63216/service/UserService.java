@@ -37,6 +37,12 @@ public class UserService {
 		return user;
 	}
 	
+	public int UpdatetUser(String email, String pass) {
+		
+		int n = userDao.updateUser(email,pass);
+		return n;
+	}
+	
 	/**
 	 *  수신자 : email
 	 *  장소(station) : 
@@ -115,4 +121,14 @@ public class UserService {
 		
 		return user;
 	}
+
+
+	public void delete_Userstation(String station_name) {
+		
+		   System.out.println("Userservice" + station_name);
+		userDao.deleteStation(station_name);
+		
+	}
+
+
 }

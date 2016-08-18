@@ -81,6 +81,11 @@ public class HomeController {
 	}
 	
 	
+	@RequestMapping(value = "/info", method = RequestMethod.GET)
+	public String info(Model model){
+		
+	     return "info";
+	}
 	
 	
 	
@@ -97,6 +102,18 @@ public class HomeController {
 	     return "{\"success\": true}";
 	}
 	
+	
+	@RequestMapping(value = "/doUpdate", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	public @ResponseBody String doUpdate(Model model, HttpServletRequest req) {
+	     String email = req.getParameter("email");
+	     String pass = req.getParameter("password");
+	     
+	     int n = userService.UpdatetUser(email, pass);
+	     System.out.println("개수:" + n);
+	     
+	     return  n == 1 ? "{\"success\": true}" :  "{\"success\": false}";
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
     public String Login(Model model){
 		
@@ -110,6 +127,12 @@ public class HomeController {
 		return "graph";
 	}
 	
+	
+	@RequestMapping(value = "/board", method = RequestMethod.GET)
+    public String board(Model model){
+		
+		return "/board/listpost";
+	}
 	
 	@RequestMapping(value = "/doLogin", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	public @ResponseBody String dologin(Model model, HttpServletRequest req, HttpSession session){
@@ -170,5 +193,14 @@ public class HomeController {
 	@ExceptionHandler(APICallException.class) 
 	public String handlAPIException (APICallException e) {
 		throw e;
+	}
+	 //////////////////////////////////////////////////////////////////////////////DeleteUserStation
+	
+	@RequestMapping(value="/DeleteUserStation", method=RequestMethod.POST, produces="application/json" )
+	public @ResponseBody String deleteUser_station (Model model, HttpServletRequest req) {
+	    String station_name = req.getParameter("station_name");
+	    System.out.println("homecontroller" + station_name);
+	    userService.delete_Userstation(station_name);
+	    return "{\"success\": true, \"places\": [] }";
 	}
 }

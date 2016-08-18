@@ -24,6 +24,8 @@
         </c:if>
          <c:if test="${not empty sessionScope.user}">
         <li><a href="<%=application.getContextPath()%>/myplaces"><span class="glyphicon glyphicon-heart-empty"></span>관심장소</a></li>
+            <li><a href="<%=application.getContextPath()%>/info"><span class="glyphicon glyphicon-heart-empty"></span>내정보</a></li>
+      
         <li><a href="<%=application.getContextPath()%>/logout"><span class="glyphicon glyphicon-log-out"></span>로그아웃</a></li>
         </c:if>
       </ul>
