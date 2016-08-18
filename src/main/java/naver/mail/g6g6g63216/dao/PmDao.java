@@ -16,7 +16,9 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 
 import naver.mail.g6g6g63216.util.Util;
@@ -37,35 +39,11 @@ public class PmDao implements IPmDao, ApiKeySpec {
 	@Value("${apikey}")
 	private String apiKey;
 	
-	/* (non-Javadoc)
-	 * @see naver.mail.g6g6g63216.dao.IPmDao#setJdbcTemplate(org.springframework.jdbc.core.JdbcTemplate)
-	 */
-	/*
-	@Override
-	public void setJdbcTemplate ( JdbcTemplate template) {
-		
-		System.out.println(this);
-		this.template = template;
-	}
-	*/
-	
-	/* (non-Javadoc)
-	 * @see naver.mail.g6g6g63216.dao.IPmDao#getApiKey()
-	 */
 	@Override
 	public String getApiKey() {
 		return apiKey;
-	}
-	
-//	@Autowired(required=true)
-//	public void setApiKey( @Value("${apikey}") String apiKey) {
-//		System.out.println("    API KEY : " + apiKey );
-//		this.apiKey = apiKey;
-//	}
+	}	
 
-	/* (non-Javadoc)
-	 * @see naver.mail.g6g6g63216.dao.IPmDao#setApiKey(java.lang.String)
-	 */
 	@Override
 	public void setApiKey( String apiKey) {
 		System.out.println("    API KEY : " + apiKey );
@@ -128,76 +106,59 @@ public class PmDao implements IPmDao, ApiKeySpec {
 	@Override
 	public List<PmData> queryBySido ( String sido) {
 		
-		String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc"
-				+ "/getCtprvnRltmMesureDnsty?"
-				+ "ServiceKey=${key}&"
-				+ "numOfRows=100&pageSize=50&pageNo=1&startPage=1&"
-				+ "sidoName=${sido}"
-		        + "&ver=1.0";
-		
-		try {
-			uri = uri.replace("${sido}", URLEncoder.encode(sido, "utf-8"))
-					 .replace("${key}", this.apiKey);
-			System.out.println("[" + sido + "] " + uri);
-			org.jsoup.Connection con = Jsoup.connect(uri);
-			con.parser(Parser.xmlParser());
-			con.timeout(20*1000);
-			Document xmlDoc = con.get();
-			Elements elems = xmlDoc.select("body items item");
-			
-			ArrayList<PmData> data = new ArrayList<PmData>();
-			int size = elems.size();
-			// ResultSet 
-			for ( int i = 0 ; i < size ; i++) {
-				Element e = elems.get(i);
-				String pm100 =e.select("pm10Value").text();
-				int pm100Grade = Util.s2i(e.select("pm10Grade").text(), 0);
-				String pm025 = e.select("pm25Value").text();
-				int pm025Grade = Util.s2i(e.select("pm25Grade").text(), 0); // ""
-				String datatime = e.select("dataTime").text();
-				
-				PmData pm = new PmData(pm100, pm100Grade, pm025, pm025Grade,datatime);
-				//System.out.println(pm100);
-				data.add(pm);
+		String query = "select xml from sido where sido_name = ? ";
+		String xml = template.query(query,new Object[]{sido},new ResultSetExtractor<String>(){
+
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				rs.next();
+				return rs.getString("xml");
 			}
-			return data;
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("encoding error", e);
-		} catch (IOException e) {
-			throw new RuntimeException("io error", e);
+		});
+		
+		
+		Document xmlDoc = Jsoup.parse(xml, "", Parser.xmlParser());
+	
+		Elements elems = xmlDoc.select("body items item");
+		
+		ArrayList<PmData> data = new ArrayList<PmData>();
+		int size = elems.size();
+		// ResultSet 
+		for ( int i = 0 ; i < size ; i++) {
+			Element e = elems.get(i);
+			String pm100 =e.select("pm10Value").text();
+			int pm100Grade = Util.s2i(e.select("pm10Grade").text(), 0);
+			String pm025 = e.select("pm25Value").text();
+			int pm025Grade = Util.s2i(e.select("pm25Grade").text(), 0); // ""
+			String datatime = e.select("dataTime").text();
+			
+			PmData pm = new PmData(pm100, pm100Grade, pm025, pm025Grade,datatime);
+			//System.out.println(pm100);
+			data.add(pm);
 		}
+		return data;
 		
 		
 	}
 	
 	@Override
 	public String getRawPmData( String sido ) {
-		String uri = "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc"
-				+ "/getCtprvnRltmMesureDnsty?"
-				+ "ServiceKey=${key}&"
-				+ "numOfRows=100&pageSize=50&pageNo=1&startPage=1&"
-				+ "sidoName=${sido}"
-		        + "&ver=1.0";
 		
-		try {
-			uri = uri.replace("${sido}", URLEncoder.encode(sido, "utf-8"))
-					 .replace("${key}", this.apiKey);
-			System.out.println("[" + sido + "] " + uri);
-			org.jsoup.Connection con = Jsoup.connect(uri);
-			con.parser(Parser.xmlParser());
-			con.timeout(5*1000);
-			Document xmlDoc = con.get();
-			return xmlDoc.toString();
+		
+		String sql = "select xml from sido where sido_name = ?";
+		String oldXml = template.query(sql, new Object[]{sido}, new ResultSetExtractor<String>(){
+
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				rs.next();
+				return rs.getString(1);
+			}
 			
-		} catch ( UnsupportedEncodingException e) {
-			throw new RuntimeException ( e );
-		} catch (IOException e) {
-			throw new APICallException ( e );
-		}
+		});
+		return oldXml;
+		
 	}
-	/* (non-Javadoc)
-	 * @see naver.mail.g6g6g63216.dao.IPmDao#queryByStation(java.lang.String)
-	 */
+
 	@Override
 	public List<PmData> queryByStation(String stationName) {
 		
