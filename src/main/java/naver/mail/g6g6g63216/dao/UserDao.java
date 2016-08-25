@@ -77,18 +77,18 @@ public class UserDao implements IUserDao {
 	}
 	
 	@Override
-	public void insertStation(Integer userSeq, StationVO station) {
-		String query = "insert into user_station (user,station ) values (?,?)";
-		int nInsert = template.update(query, new Object[]{userSeq,station.getSeq()});
+	public void insertStation(Integer userSeq, StationVO station,int pm10Val) {
+		String query = "insert into user_station (user,station,pm100 ) values (?,?,?)";
+		int nInsert = template.update(query, new Object[]{userSeq,station.getSeq(),pm10Val});
 		System.out.println("inserted new stations : " + nInsert);
 		
 	}
 	
 	@Override
-	public void deleteStation(String station_name) {
+	public void deleteStation(Integer seq, String station_name) {
 		   System.out.println("userdao" + station_name);
-		String query = "delete from user_station where station in (select seq from stations where station_name = ?)";
-	     template.update(query, new Object[]{station_name});
+		String query = "delete from user_station where station in (select seq from stations where station_name = ?) and user = ?";
+	     template.update(query, new Object[]{station_name,seq});
 		
 	}
 	

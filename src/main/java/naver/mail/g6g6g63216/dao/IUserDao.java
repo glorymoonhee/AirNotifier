@@ -17,8 +17,8 @@ public interface IUserDao {
 	public int updateUser ( String email, String password);
 	public UserVO findUser(String email, String pass);
 	
-	public void insertStation ( Integer userSeq, StationVO station);
-	public void deleteStation (String station_name);
+	public void insertStation ( Integer userSeq, StationVO station, int pm10Val);
+	public void deleteStation (Integer seq ,String station_name);
 	
 	public List<StationVO> findplaces(Integer userSeq);
 }

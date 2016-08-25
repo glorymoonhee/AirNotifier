@@ -56,16 +56,48 @@ $(document).ready( function() {
 		});
 	});
 	
-	$("#btn_add_place").on("click", function(){
-		
+	$("#btn-add-place").on("click", function(){
 		var stationName = $('#stationName').val();
 		console.log ("station" , stationName);
 		var url = ctxpath + '/station/register';
-		$.post ( url , {station: stationName }, function( resp ) {
+		var pm10 = $('#pm10Value').val();
+		
+		if ( ! /^[0-9]+$/.test ( pm10 ) ) {
+			alert ( '값이 이상하다.');
+			return ;
+		}
+		
+		$.post ( url , {station: stationName, pm10 :pm10  }, function( resp ) {
 			console.log ( resp );
+			if ( resp.success ) {
+				$('#place-dialog').modal('hide');
+			} else {
+				if ( resp.cause == 'BAD_PM10') {
+					alert( 'pm 10 수치값이 이상합니다' );
+				} else {
+					alert( '알 수 없는 오류 : ' + resp.cause );
+				}
+			}
 		});
+		
 	});
 	
+	
+	
+	$("#btn-remove-place").on("click", function(){
+		var stationName = $('#stationName').val();
+		var url = ctxpath + '/station/delete';
+		
+		$.post ( url , {station: stationName}, function( resp ) {
+			console.log ( resp );
+			if ( resp.success ) {
+				alert('OK!!! SUCCESS')
+			} else {
+				alert('Fail' + resp.cause);
+			}
+		});
+		
+	});
 });
 </script> 
 </head>
@@ -86,9 +118,17 @@ $(document).ready( function() {
 	</c:forEach>
 </select>
  관측소 : ${station}
-<c:if test="${not empty sessionScope.user}">
-	<button id="btn_add_place">장소등록</button>
-	<input type="text" id="pm10Value" ">
+<c:if test="${not empty sessionScope.user}"><!--  session.getAttribute("user") != null  -->
+	
+	<c:if test="${favoredPlace}"><!-- request.getAttribute("favforedPlace") == True -->
+			<button id="btn-remove-place">장소해제</button>
+	</c:if>
+	
+	<c:if test="${not favoredPlace}"><!-- request.getAttribute("favforedPlace") == True -->
+	<button id="btn-show-modal"  data-toggle="modal" data-target="#place-dialog">장소등록</button>
+	</c:if>
+	
+
 	<input type="hidden" id="loginUser" value="${sessionScope.user.seq }">
 </c:if>
  <table class="table table-striped">
@@ -156,6 +196,24 @@ $(document).ready( function() {
  </table>
  
  
+<div id="place-dialog" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">장소등록</h4>
+      </div>
+      <div class="modal-body">
+      	<p>통보받을 PM10 수치를 입력합니다(비우면 통보받지 않습니다). </p>
+        <p><input type="text" id="pm10Value" class="form-control" ></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">취소 </button>
+        <button type="button" class="btn btn-primary" id="btn-add-place">등록하기</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 </body>
 </html>

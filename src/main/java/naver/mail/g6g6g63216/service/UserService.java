@@ -123,10 +123,10 @@ public class UserService {
 	}
 
 
-	public void delete_Userstation(String station_name) {
+	public void delete_Userstation(Integer seq ,String station_name) {
 		
 		   System.out.println("Userservice" + station_name);
-		userDao.deleteStation(station_name);
+		   userDao.deleteStation(seq,station_name);
 		
 	}
 

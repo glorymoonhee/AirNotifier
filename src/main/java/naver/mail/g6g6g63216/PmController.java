@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import naver.mail.g6g6g63216.dao.IStationDao;
+import naver.mail.g6g6g63216.dao.IUserDao;
 import naver.mail.g6g6g63216.vo.PmData;
 import naver.mail.g6g6g63216.vo.StationVO;
+import naver.mail.g6g6g63216.vo.UserVO;
 
 @Controller
 @RequestMapping(value = {"/pm"})
@@ -34,6 +36,10 @@ public class PmController {
 	@Autowired
 	@Qualifier("proxyStation") 
 	private IStationDao stationDao;
+	
+	@Autowired
+	private IUserDao userDao;
+	
 	
 	@RequestMapping( value= {"/10"}, method={RequestMethod.GET} )
 	public ModelAndView pm10 ( ) {
@@ -67,6 +73,9 @@ public class PmController {
 		sidos.add("전북");
 		String sido = null;
 		
+		
+		
+		
 		if(req.getParameter("sido")==null){
 			sido ="[지역선택]";
 		}else{
@@ -74,7 +83,27 @@ public class PmController {
 		}
 		
 		String stationName = req.getParameter("name");
-		
+	
+		if(req.getSession()!=null && req.getSession().getAttribute("user")!=null){
+			
+			UserVO user = (UserVO) req.getSession().getAttribute("user");
+			List<StationVO> stations = userDao.findplaces(user.getSeq()); // [ 종로, 양천 ]
+			
+			req.setAttribute("favoredPlace", Boolean.FALSE);
+			for(StationVO s : stations){
+				
+				if(s.getName().equals( stationName)){ 
+					
+					req.setAttribute("favoredPlace", Boolean.TRUE);
+					
+				}
+			}
+			
+		}else{ /*로그인을 안했다면 */
+			
+			
+		}
+
 	
 		System.out.println("sido:" + sido);
 		System.out.println("station: " + stationName);
@@ -90,7 +119,6 @@ public class PmController {
 			
 		}
 	//	System.out.println(data);
-		
 		
 		
 	//	model.addAttribute("selected", stationName);

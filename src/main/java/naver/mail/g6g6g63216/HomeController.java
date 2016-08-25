@@ -196,11 +196,4 @@ public class HomeController {
 	}
 	 //////////////////////////////////////////////////////////////////////////////DeleteUserStation
 	
-	@RequestMapping(value="/DeleteUserStation", method=RequestMethod.POST, produces="application/json" )
-	public @ResponseBody String deleteUser_station (Model model, HttpServletRequest req) {
-	    String station_name = req.getParameter("station_name");
-	    System.out.println("homecontroller" + station_name);
-	    userService.delete_Userstation(station_name);
-	    return "{\"success\": true, \"places\": [] }";
-	}
 }

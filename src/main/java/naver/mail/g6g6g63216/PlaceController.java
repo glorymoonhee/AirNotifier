@@ -7,7 +7,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.jsoup.helper.HttpConnection.Request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -21,6 +20,7 @@ import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.dao.IStationDao;
 import naver.mail.g6g6g63216.dao.IUserDao;
 import naver.mail.g6g6g63216.service.PlaceService;
+import naver.mail.g6g6g63216.service.UserService;
 import naver.mail.g6g6g63216.vo.PlaceVO;
 import naver.mail.g6g6g63216.vo.PmData;
 import naver.mail.g6g6g63216.vo.StationVO;
@@ -42,6 +42,9 @@ public class PlaceController {
 	
 	@Autowired
 	private PlaceService placeService ;
+	
+	@Autowired
+	private UserService userService ;
 	
 	public void setDao ( IPmDao pmDao) {
 		//System.out.println("[pm dao in PlaceController] " + pmDao);
@@ -154,9 +157,22 @@ public class PlaceController {
 	public @ResponseBody Map<String, Object> register_station_name(HttpServletRequest req, HttpSession session ) {
              
 		String stationName = req.getParameter("station");
+		String pm10 = req.getParameter("pm10");
+		
+		int pm10Val = 5000 ;
+		Map<String, Object> resMap = new HashMap<String, Object>();
+		try {
+			pm10Val = Integer.parseInt(pm10);
+		} catch (NumberFormatException e) {
+			  resMap.put("success", Boolean.FALSE);
+			  resMap.put("cause", "BAD_PM10");
+			
+			
+			return resMap;
+		}
+		
 		UserVO loginUser = (UserVO) session.getAttribute("user");
 		
-		Map<String, Object> resMap = new HashMap<String, Object>();
 		if(loginUser ==null){
 		  resMap.put("success", Boolean.FALSE);
 		  resMap.put("cause", "NO_LOGIN");
@@ -178,9 +194,41 @@ public class PlaceController {
 		 *  
 		 */
 		StationVO station = this.stationDao.findStationsByName(stationName);
-		userDao.insertStation(loginUser.getSeq(), station );
+		userDao.insertStation(loginUser.getSeq(), station, pm10Val);
 		resMap.put("success", Boolean.TRUE);
 		
+		return resMap;
+	}
+	
+	
+	@RequestMapping(value="/DeleteUserStation", method=RequestMethod.POST, produces="application/json" )
+	public @ResponseBody String deleteUser_station (Model model, HttpServletRequest req, HttpSession session) {
+		UserVO user = (UserVO) session.getAttribute("user");
+		
+	    String station_name = req.getParameter("station_name");
+	 
+	    userService.delete_Userstation(user.getSeq(), station_name);
+	    return "{\"success\": true, \"places\": [] }";
+	}
+	
+	
+	@RequestMapping(value="/station/delete" , method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> delete (HttpSession session,HttpServletRequest req){
+		
+        UserVO loginUser = (UserVO) session.getAttribute("user");
+    	Map<String, Object> resMap = new HashMap<String, Object>();
+    	String stationName = req.getParameter("station");
+    	
+		if(loginUser ==null){
+		  resMap.put("success", Boolean.FALSE);
+		  resMap.put("cause", "NO_LOGIN");
+		  return resMap;
+		}
+		
+		
+        userService.delete_Userstation(loginUser.getSeq(), stationName);	
+        resMap.put("success", Boolean.TRUE);
+        
 		return resMap;
 	}
 	
