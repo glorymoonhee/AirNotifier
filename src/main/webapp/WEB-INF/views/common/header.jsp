@@ -38,4 +38,4 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
-<div style="height:70px;"></div>
+<div style="height:50px;"></div>
