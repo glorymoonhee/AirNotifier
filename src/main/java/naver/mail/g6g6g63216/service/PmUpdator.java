@@ -3,7 +3,9 @@ package naver.mail.g6g6g63216.service;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.annotation.PostConstruct;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import naver.mail.g6g6g63216.dao.AirDataLoader;
 import naver.mail.g6g6g63216.dao.CachePmDao;
 import naver.mail.g6g6g63216.util.Util;
+import naver.mail.g6g6g63216.vo.UserVO;
 
 @Service
 public class PmUpdator {
@@ -33,6 +36,9 @@ public class PmUpdator {
 	@Autowired
 	private CachePmDao dao;
 	
+	@Autowired
+	private MailService mailService;
+
 	private MessageDigest sh ;
 	
 	
@@ -45,6 +51,14 @@ public class PmUpdator {
 		Scanner sc = new Scanner( CachePmDao.class.getResourceAsStream("/region.txt"), "UTF-8" );
 		
 		sh = MessageDigest.getInstance("SHA-256");
+		
+		String sido = null;
+		while(sc.hasNextLine()){
+			sido = sc.nextLine().trim();
+			System.out.println("target : " + sido );
+			regions.add(sido);
+		}
+		
 		/*
 		String sido = null;
 		while(sc.hasNextLine()){
@@ -66,10 +80,10 @@ public class PmUpdator {
 		
 	}
 	
-	@Scheduled( cron="0 20 * * * ?" )
+	@Scheduled( cron="00 20 * * * ?" )
 	public void updatePmData() {
 		
-		logger.info("Start update");
+		logger.info("Start update for " + regions);
 		for (String region:regions){
 			logger.info("region: " + region);
 			
@@ -90,7 +104,7 @@ public class PmUpdator {
 	 * @param oldXml 아까전에 읽어들였던 시도의 data
 	 * @param newXml 지금 읽어들인 최신의 시도 data
 	 */
-	private void startNotification(String oldXml, String newXml) {
+	public void startNotification(String oldXml, String newXml) {
 		/*
 		 * 1. 양쪽 xml을 jsoup으로 파싱을 합니다.
 		 */
@@ -99,26 +113,58 @@ public class PmUpdator {
 		Document newDoc = Jsoup.parse(newXml, "", Parser.xmlParser()); 
 		Elements newItems = newDoc.select("body items item"); // A, B, C
 		
-		/*
-		 * 
-		List<UserVO> users = new ArrayList<>();
-		for ( A, B, C ) {
-		  region = A ;
-		  old_pm100 = oldImte.get(A).pm100; // 45
-		  new_pm100 = newItem.get(A).pm100; // 97
-		  
+		
+		List<UserVO> users = new ArrayList<UserVO>();
+		Map<String,PmNotif> map = new HashMap<String, PmNotif>();
+		
+		for(int i=0; i< oldItems.size(); i++ ){
+		   String stationName = oldItems.get(i).select("stationName").text(); 
+		   int oldpm100 = s2i(oldItems.get(i).select("pm10Value").text());
+		   int newpm100 = s2i(newItems.get(i).select("pm10Value").text());
 		   
+		   if ( oldpm100 == -1 || newpm100 == -1 ) {
+			   continue;
+		   }
+		   
+		   users = dao.getListUsers(stationName, oldpm100, newpm100);
+		   map.put(stationName, new PmNotif(stationName, oldpm100, newpm100, users));
+		}
+			
+			 System.out.println(users.size()+"user size 제발 나와라!!!!!!!!!!!!!!");
+		
+			 
+		for(String sido : map.keySet()){
+			PmNotif pmnotif = map.get(sido);
+			for ( UserVO u : pmnotif.users ) {
+				String email = dao.getUser_email(u.getSeq());
+				System.out.println("email: " + email);
+				mailService.sendMail(email, "[PM변경] " + sido , pmnotif.oldPM +"에서"+ pmnotif.newPM+"로 바뀌었습니다."); 
+			}
+				 
 		}
 		
-		 */
+	}
+	
+	private static class PmNotif {
+		String sido;
+		int oldPM;
+		int newPM ;
+		List<UserVO> users;
+		public PmNotif(String sido, int oldPM, int newPM, List<UserVO> users) {
+			super();
+			this.sido = sido;
+			this.oldPM = oldPM;
+			this.newPM = newPM;
+			this.users = users;
+		}
 		
-//		con.parser(Parser.xmlParser());
-
-		/*
-		 * 2. 루프 - 각각의 관측소마다. 이 관측소를 추가한 사용자들을 불러옵니다.
-		 *       - user_station.pm100  값을 기준으로
-		 *       - oldXml 의 값과 newXml 의 값이 pm100 의 양쪽에 존재하면 이 사람한테 메일을 보내줘야 함.
-		 */
-		
+	}
+	
+	private int s2i ( String s ) {
+		try {
+			return Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return -1 ;
+		}
 	}
 }

@@ -12,7 +12,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="<%=application.getContextPath()%>">미세먼지 알리미</a>
+      <a class="navbar-brand" href="<%=application.getContextPath()%>/">미세먼지 알리미</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

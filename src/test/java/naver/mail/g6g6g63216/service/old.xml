@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+
+<response>
+	<header>
+		<resultCode>00</resultCode>
+		<resultMsg>NORMAL SERVICE.</resultMsg>
+	</header>
+	<body>
+		<items>
+			
+				<item>
+					<stationName>중앙로</stationName>
+					
+					<dataTime>2016-08-23 12:00</dataTime>
+					<so2Value>-</so2Value>
+					<coValue>0.4</coValue>
+					<o3Value>0.041</o3Value>
+					<no2Value>0.007</no2Value>
+					<pm10Value>21</pm10Value>
+					
+					
+				    
+					<khaiValue>59</khaiValue>
+					<khaiGrade>2</khaiGrade>
+					<so2Grade></so2Grade>
+					<coGrade>1</coGrade>
+					<o3Grade>2</o3Grade>
+					<no2Grade>1</no2Grade>
+					<pm10Grade>1</pm10Grade>
+					
+				    
+				</item>
+			
+				
+			
+		</items>
+			<numOfRows>999</numOfRows>
+			<pageNo>1</pageNo>
+			<totalCount>10</totalCount>
+	</body>
+</response>

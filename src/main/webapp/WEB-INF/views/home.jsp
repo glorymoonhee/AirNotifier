@@ -184,7 +184,7 @@ $(document).ready ( function() {
 	<div class="row">
 		<div id="map"></div>
 		<div>
-			<button id="btnCurLoc" >중심점</button>
+		<!-- 	<button id="btnCurLoc" >중심점</button> -->
 		</div>
 	</div>
 	

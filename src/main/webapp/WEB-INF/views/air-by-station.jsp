@@ -88,6 +88,7 @@ $(document).ready( function() {
  관측소 : ${station}
 <c:if test="${not empty sessionScope.user}">
 	<button id="btn_add_place">장소등록</button>
+	<input type="text" id="pm10Value" ">
 	<input type="hidden" id="loginUser" value="${sessionScope.user.seq }">
 </c:if>
  <table class="table table-striped">

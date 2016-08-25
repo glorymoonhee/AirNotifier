@@ -160,6 +160,19 @@
 		
 	</dependencies>
     <build>
+    	<finalName>air</finalName>
+    	<resources>
+    		<resource>
+    			<directory>src/main/resources</directory>
+    			<excludes>
+    				<exclude>local/**</exclude>
+    				<exclude>product/**</exclude>
+    			</excludes>
+    		</resource>
+    		<resource>
+    			<directory>src/main/resources/${deploy.dir}</directory>
+    		</resource>
+    	</resources>
         <plugins>
             <plugin>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -197,4 +210,20 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+    	<profile>
+    		<activation><activeByDefault>true</activeByDefault></activation>
+    		<id>a</id>
+    		<properties>
+    			<deploy.dir>local</deploy.dir>
+    		</properties>
+    	</profile>
+    	
+    	<profile>
+    		<id>b</id>
+    		<properties>
+    			<deploy.dir>product</deploy.dir>
+    		</properties>
+    	</profile>
+    </profiles>
 </project>

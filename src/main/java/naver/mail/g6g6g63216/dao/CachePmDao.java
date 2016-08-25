@@ -27,6 +27,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import naver.mail.g6g6g63216.vo.PlaceVO;
 import naver.mail.g6g6g63216.vo.PmData;
+import naver.mail.g6g6g63216.vo.UserVO;
 
 public class CachePmDao implements IPmDao {
 	
@@ -159,7 +160,42 @@ public class CachePmDao implements IPmDao {
 		String sql = "update sido set xml = ? , sha256 = ? where sido_name = ?;";
 		template.update(sql, new Object[]{xml,key,sido});
 		
-		
 	}
+
+	////////////////////////어디 dao에 넣을까
+	
+	public List<UserVO> getListUsers(String stationName,int oldPM100, int newPM100){
+		
+		String sql = "select user,pm100 from user_station where station in (select seq from stations where station_name = ? and ((pm100 >=? and pm100<=?) or (pm100 <=? and pm100 >=?)))";
+		List<UserVO> users= template.query(sql, new Object[]{stationName,oldPM100,newPM100,oldPM100,newPM100}, new RowMapper<UserVO>(){
+             
+	    	
+			@Override
+			public UserVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+				
+				UserVO user = new UserVO(rs.getInt("user"), rs.getInt("pm100"));
+				return user;
+			}
+	    });
+		 return users;
+	}
+
+	public String getUser_email(Integer seq) {
+		
+		String sql = "select email from users where seq = ?";
+		 String email = template.query(sql, new Object[]{seq},new ResultSetExtractor<String>(){
+
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				// TODO Auto-generated method stub
+				rs.next();
+				return rs.getString("email");
+			}
+			 
+		 } );
+		
+		return email;
+	}
+	
 	
 }

@@ -14,7 +14,7 @@ $(document).ready(function() {
 		$.post(url ,data, function(res){
 			if ( res.success ) {
 				alert ( '로그인 성공 ');
-				document.location.href = '<%=request.getContextPath()%>';
+				document.location.href = '<%=request.getContextPath()%>/';
 			}
 		});
 		
