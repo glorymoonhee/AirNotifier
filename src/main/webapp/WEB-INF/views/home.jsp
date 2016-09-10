@@ -7,6 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
  <script type="text/javascript" src="<%=application.getContextPath() %>/resources/js/vticker.min.js"></script>
+ <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
  <style type="text/css">
 html, body {
 	height: 100%;
@@ -32,8 +33,14 @@ function addMarkerListener ( marker,station, infowindow ) {
 		 * 2. 서버쪽에서 특정 스테이션의 먼지 정보를 json으로 반환해줌.
 		 * 3. infowindow.setContent 로 먼지 정보를 업데이트 해줌.
 		 */
-		 
+		
 		 var stationName = station.name;
+		 var url = ctxpath + '/query/station/' + stationName ;
+		 $.get( url,  function( resp ){
+				 
+		 	drawChart(stationName,resp.pmdata);
+		 });
+		 
 		  console.log(stationName);
 		 var url =  '<%=request.getContextPath()%>' + '/query/station/' + stationName ;
 
@@ -54,6 +61,70 @@ function addMarkerListener ( marker,station, infowindow ) {
 }
 // 원래는 서버에서 얻어와야 하는데 관련된 기능이 없으니까 일단 몇개 넣어두고 화면에 띄워본디ㅏ.
 
+
+function drawChart (stationName, pmdata ) {
+	
+	google.charts.setOnLoadCallback( function() {
+		
+		var dataSource = [];
+		dataSource.push ( ['Time', 'PM 10'] );
+		for ( var i = pmdata.length - 1 ; i >= 0 ; i -- ) {
+			var pm = pmdata[i];
+			// 2016-03-20 11:00:00
+			var arr = [ pm.dataTime.substring(8), parseInt(pm.pm100) ];
+			dataSource.push ( arr );
+			
+		}
+		
+		var data = google.visualization.arrayToDataTable(dataSource );
+		
+		var options = {
+				width: '100%',
+				height: 500,
+		          title: 'PM 수치',
+		          curveType: 'function',
+		          legend: { position: 'bottom' },
+		          chartArea : {
+						left : 40,
+						top : 20,
+						width: '90%',
+						height: '80%'
+					}
+		};
+		var chart = new google.visualization.LineChart(document.getElementById('chart'));
+		chart.draw(data, options);
+	});
+	
+	 
+	
+}
+
+function CenterControl(controlDiv, map) {
+
+  // Set CSS for the control border.
+  var controlUI = document.createElement('div');
+  controlUI.style.backgroundColor = '#fff';
+  controlUI.style.border = '2px solid #fff';
+  controlUI.style.borderRadius = '3px';
+  controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+  controlUI.style.cursor = 'pointer';
+  controlUI.style.marginBottom = '22px';
+  controlUI.style.textAlign = 'center';
+  controlUI.title = 'Click to recenter the map';
+  controlDiv.appendChild(controlUI);
+
+  
+  // Set CSS for the control interior.
+  var legend = $('<div>' 
+		  + '<div><span style="background-color: blue; width:14px;height:14px;display:inline-block;"></span> 맑음</div>'
+		  + '<div><span style="background-color: green; width:14px;height:14px;display:inline-block;"></span> 보통</div>' 
+		  + '<div><span style="background-color: orange; width:14px;height:14px;display:inline-block;"></span> 나쁨</div>'
+		  + '<div><span style="background-color: red; width:14px;height:14px;display:inline-block;"></span> 매우나쁨</div></div>');
+  controlUI.appendChild( legend[0] );
+  
+
+}
+
 function initMap() {
 	
 	/*
@@ -66,6 +137,12 @@ function initMap() {
 		},
 		zoom : 14
 	});
+	var centerControlDiv = document.createElement('div');
+	var centerControl = new CenterControl(centerControlDiv, map);
+	centerControlDiv.index = 1;
+	
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(centerControlDiv);
+	
 	
 	/*
 	 * 2. info window 를 띄웁니다.
@@ -127,6 +204,16 @@ function topKStation (){
 	
 	console.log ( url );
 	
+	
+	var stnIcon = {
+		    path: 'M-7,0a7,7 0 1,0 14,0a7,7 0 1,0 -14,0',
+		    fillColor: 'blue',
+		    fillOpacity: 0.2,
+		    scale: 1,
+		    strokeColor: 'blue',
+		    strokeWeight: 2
+		  };
+	
 	$.get(url, function(resp){
 	
 		if ( resp.success ) {
@@ -142,17 +229,39 @@ function topKStation (){
 			for( var i = 0; i < stations.length; i ++){
 				
 				var pos = {lat: parseFloat(stations[i].lat), lng: parseFloat(stations[i].lng)};
+				var stnName = stations[i].name;
+				var pm100 = resp[stnName]; // by 30 : blue, by 80 green , by 150 yellow, else red
+				var color = '#000';
+				if(pm100<=30){
+					color = 'blue'
+				}else if(pm100<=80){
+					color = 'green'
+				}else if(pm100<=150){
+					color =  'orange'
+				}else{
+					color = 'red'
+				}
+				
 				var marker = new google.maps.Marker({
 				    position: pos,
 				    map: map,
+				    icon : {
+					    path: 'M-7,0a7,7 0 1,0 14,0a7,7 0 1,0 -14,0',
+					    fillColor: color,
+					    fillOpacity: 0.8,
+					    scale: 1,
+					    strokeColor: color,
+					    strokeWeight: 2
+					},
 				    title: stations[i].name
 				});
 				markers.push ( marker );
 				addMarkerListener ( marker, stations[i], infoWindow );
+				
 				bnd.extend ( marker.getPosition() );
 			}
 			
-			map.fitBounds ( bnd );
+			// map.fitBounds ( bnd );
 			
 			
 		}
@@ -170,7 +279,7 @@ $(document).ready ( function() {
 		    padding: 4
 		  });
 	
-	
+	 google.charts.load('current', {'packages':['corechart']});
 	
 });
 	
@@ -203,19 +312,13 @@ $(document).ready ( function() {
 	 	</ul>
 		
 		</div>
-		<%-- 
-		<c:forEach var="data" items="${sidoData}" >
-           <div class="panel panel-success col-sm-3">
-           <div class="panel-heading">${sidoMap[data] } <button class="ddd">${sidoMap[data]}</button></div>
-           <div class="panel-body"> 
-           	<div>PM10 : ${data.pm100} (${data.pm100Grade}등급) </div>
-			<div>PM2.5 : ${data.pm025}(${data.pm025Grade}등급)</div>
-             </div>
-           </div>
-           
-		</c:forEach> --%>
+		<div id="chart" >
+		
+		</div>
+	
 	</div>
 </div>
+
 </body>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHMC2m-a0168rs3InKfOwn-O7a_fYSjVM&callback=initMap"></script>
 <script type="text/javascript">

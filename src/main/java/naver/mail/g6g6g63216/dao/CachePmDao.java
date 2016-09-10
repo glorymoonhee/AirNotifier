@@ -197,5 +197,8 @@ public class CachePmDao implements IPmDao {
 		return email;
 	}
 	
-	
+	@Override
+	public Integer queryByStn(String stationName) {
+		return this.target.queryByStn(stationName);
+	}
 }

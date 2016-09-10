@@ -41,5 +41,6 @@ public interface IPmDao {
 	 * @return
 	 */
 	String getRawPmData(String sido);
+	Integer queryByStn(String stationName);
 
 }

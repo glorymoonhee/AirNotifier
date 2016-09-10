@@ -135,17 +135,23 @@ public class PlaceController {
 		
 		System.out.println(cnt + ", " + lat + ", " + lng);
 		List<StationVO> stations = placeService.getNearest(lat, lng, cnt);
+		
 		System.out.println(stations);
 		
-		/*
-		 *  {
-		 *    success : true,
-		 *    nearest : [{ddddd}, {dddd} ]
-		 *  }
-		 */
 		Map<String, Object> resp = new HashMap<String, Object>();
+		resp.put("nearest", stations);// A, B, C
+		System.out.println("DAO: " + dao.toString());
+		for(StationVO s :stations){
+			Integer i = dao.queryByStn(s.getName());
+			int pm100 = i.intValue();
+			resp.put(s.getName(), pm100);
+		} 
+		
+		
 		resp.put("success", true );
-		resp.put("nearest", stations);
+//		resp.put("nA", 23);
+//		resp.put("nB", 53);
+//		resp.put("nC", 42);
 		return resp ;
 		
 		

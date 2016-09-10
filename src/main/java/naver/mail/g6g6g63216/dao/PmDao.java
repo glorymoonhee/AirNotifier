@@ -211,8 +211,7 @@ public class PmDao implements IPmDao, ApiKeySpec {
 	@Override
 	public List<PlaceVO> findAllPlaces ( ) {
 		String query = "select seq,locname,x(pos) as lat, y(pos) as lng, cdate from locations order by cdate desc";
-//		JdbcTemplate template = new JdbcTemplate();// �뿬湲� �엳�쓣 �븘�슂媛� �뾾�쓬.
-//		template.setDataSource(ds);
+         // 
 		
 		List<PlaceVO> places = template.query(query, new RowMapper<PlaceVO>(){
 
@@ -230,5 +229,41 @@ public class PmDao implements IPmDao, ApiKeySpec {
 		});
 		
 		return places;
+	}
+	
+	@Override
+	public Integer queryByStn(String stationName) {
+		   
+		String query = "select xml from sido where sido_name in (select sido from stations where station_name = ?)";
+		String xml = template.query(query, new Object[]{stationName}, new ResultSetExtractor<String>() {
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				rs.next();
+				return rs.getString("xml");
+			}
+		});
+	
+		
+		Document xmlDoc = Jsoup.parse(xml, "", Parser.xmlParser());
+		
+		Elements elems = xmlDoc.select("body items item");
+		int size = elems.size();
+		int pm100 = 0;
+	
+		
+		for ( int i = 0 ; i < size ; i++) {
+			Element e = elems.get(i);
+			if(e.select("stationName").text().equals(stationName)){
+				try {
+					pm100 =Integer.parseInt(e.select("pm10Value").text());	
+				} catch (NumberFormatException e2) {
+					pm100 = -1 ;
+				}
+				break;
+			}
+			 
+		}
+		
+		return pm100;
 	}
 }

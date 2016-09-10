@@ -4,6 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta name="viewport" content="width=device-width, initial-scale=1">	
 <title>로그인</title>
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
 <script type="text/javascript">
