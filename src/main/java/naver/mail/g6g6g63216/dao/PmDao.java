@@ -176,6 +176,7 @@ public class PmDao implements IPmDao, ApiKeySpec {
 		try {
 			uri = uri.replace("${station}", URLEncoder.encode(stationName, "utf-8"))
 					 .replace("${key}", this.apiKey);
+			System.out.println("[URI] " + uri);
 			org.jsoup.Connection con = Jsoup.connect(uri);
 			con.parser(Parser.xmlParser());
 			Document xmlDoc = con.get();
@@ -183,8 +184,15 @@ public class PmDao implements IPmDao, ApiKeySpec {
 			
 			ArrayList<PmData> data = new ArrayList<PmData>();
 			int size = elems.size();
+			int x = 0;
+			 if(size >= 25) {
+			     x = 1;
+			 }else{
+				 x = 0;
+			 }
+			
 			// ResultSet 
-			for ( int i = 0 ; i < size ; i++) {
+			for ( int i = x ; i < size ; i++) {
 				Element e = elems.get(i);
 				String pm100 =e.select("pm10Value").text();
 				int pm100Grade = Util.s2i(e.select("pm10Grade").text(), 0);

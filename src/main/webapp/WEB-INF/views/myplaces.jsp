@@ -174,11 +174,7 @@ $(document).ready ( function(){
 		$.get( url,  function( resp ){
 			console.log ( resp );
 			pmdata[ resp.station ] = resp.pmdata ; 
-			/*
-			(function (sn, data) {
-				pmdata[ sn ] = data ; // pmdata.put(stationName, data );
-			})( resp.station, resp.pmdata);
-			*/
+		
 			
 		});
 	}

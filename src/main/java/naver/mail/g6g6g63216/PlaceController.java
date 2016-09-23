@@ -85,6 +85,7 @@ public class PlaceController {
 	@RequestMapping( value="/query/station/{stationName}", method=RequestMethod.GET)
 	public @ResponseBody Map<String, Object> infoByStation ( @PathVariable String stationName ) {
 		
+		String [] names = stationName.split(",");
 		List<PmData> data = this.dao.queryByStation(stationName);
 		
 		System.out.println("경로 변수 stationName : " + stationName);

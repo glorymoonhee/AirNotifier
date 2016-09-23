@@ -23,6 +23,7 @@
         <li><a href="<%=application.getContextPath()%>/login"><span class="glyphicon glyphicon-log-in"></span>로그인</a></li>
         </c:if>
          <c:if test="${not empty sessionScope.user}">
+        <li><a href="<%=application.getContextPath()%>/board"><span class="glyphicon glyphicon-user"></span>게시판</a></li>
         <li><a href="<%=application.getContextPath()%>/myplaces"><span class="glyphicon glyphicon-heart-empty"></span>관심장소</a></li>
             <li><a href="<%=application.getContextPath()%>/info"><span class="glyphicon glyphicon-heart-empty"></span>내정보</a></li>
       
@@ -33,6 +34,7 @@
       <ul class="nav navbar-nav navbar-right">
       <c:if test="${empty sessionScope.user}">
         <li><a href="<%=application.getContextPath()%>/join"><span class="glyphicon glyphicon-user"></span>회원가입</a></li>
+        <li><a href="<%=application.getContextPath()%>/board"><span class="glyphicon glyphicon-user"></span>게시판</a></li>
       </c:if>
       </ul>
     </div><!-- /.navbar-collapse -->

@@ -128,12 +128,7 @@ public class HomeController {
 	}
 	
 	
-	@RequestMapping(value = "/board", method = RequestMethod.GET)
-    public String board(Model model){
-		
-		return "/board/listpost";
-	}
-	
+
 	@RequestMapping(value = "/doLogin", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
 	public @ResponseBody String dologin(Model model, HttpServletRequest req, HttpSession session){
 	     String email = req.getParameter("email");
