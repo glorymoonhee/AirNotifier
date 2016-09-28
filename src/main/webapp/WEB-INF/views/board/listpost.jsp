@@ -47,11 +47,11 @@ function loadPosting ( pagenum ) {
 	var url = "<%=request.getContextPath()%>/board/api/posting/"+ pagenum;
 	$.get(url, function(resp){
 		  console.log('OK?');
-		  /*
+		  
 		  resp.success = true;
 		  resp.pagenum = 1;
 		  resp.postings = fake;
-		  */
+		  
 		renderPostings(resp.pagenum, resp.postings);
 	});	
 }

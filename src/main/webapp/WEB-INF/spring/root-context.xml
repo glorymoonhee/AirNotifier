@@ -26,6 +26,9 @@
 		<qualifier value="remoteStation"></qualifier>
 	</bean>
 	
+
+	
+	
 	<!-- DataSource related beans -->
 	<context:property-placeholder location="classpath:*.properties"/>
 	<bean id="simpleDs" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
@@ -71,7 +74,9 @@
 		<qualifier value="cachedPM"/>  
 	</bean>
         
-        
+    <bean id="boardDao" class="naver.mail.g6g6g63216.dao.BoardDao">
+		<property name="jdbcTemplate" ref="tpl"> </property>
+	</bean>    
         
         <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"> 
         <property name="port" value="${mail.port}"></property> 
