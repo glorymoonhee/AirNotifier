@@ -2,6 +2,8 @@ package naver.mail.g6g6g63216.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,17 +33,19 @@ private JdbcTemplate template ;
 				String content = rs.getString("content");
 				String date = rs.getString("date");
 				int viewcount = rs.getInt("viewcount");
+				//DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
+				//date.setDateFormat(df);
 				
+				System.out.println( writer+"~~~~~~~~~~~~~~~~~~~"+viewcount+"~~~~~~~~~~"+date);
 				
+				PostingVO p = new PostingVO(seq, title, writer, content, date, viewcount);
 				
-				
-				
-				return null;
+				return p;
 			}
 			
 		});
 		
-		return null;
+		return postings;
 	}
 	
 	

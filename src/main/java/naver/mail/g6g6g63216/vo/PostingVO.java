@@ -5,7 +5,7 @@ public class PostingVO {
 	 private String title;
 	 private String writer;
 	 private String content;
-	 private String dataTime;
+	 private String dateTime;
 	 private int viewcount;
 
 	
@@ -17,7 +17,7 @@ public class PostingVO {
 		this.title = title;
 		this.writer = writer;
 		this.content = content;
-		this.dataTime = dataTime;
+		this.dateTime = dataTime;
 		this.viewcount = viewcount;
 	}
 
@@ -69,10 +69,10 @@ public class PostingVO {
 		this.writer = writer;
 	}
 	public String getDataTime() {
-		return dataTime;
+		return dateTime;
 	}
 	public void setDataTime(String dataTime) {
-		this.dataTime = dataTime;
+		this.dateTime = dataTime;
 	}
 	  
 	 

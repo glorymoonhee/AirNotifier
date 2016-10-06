@@ -1,11 +1,11 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">	
-<title>·Î±×ÀÎ</title>
+<title>ë¡œê·¸ì¸</title>
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
 <script type="text/javascript">
 var fake = [{
@@ -46,11 +46,16 @@ var fake = [{
 function loadPosting ( pagenum ) {
 	var url = "<%=request.getContextPath()%>/board/api/posting/"+ pagenum;
 	$.get(url, function(resp){
-		  console.log('OK?');
+		 
+	      console.log(resp.sucess);
+	       console.log(resp.postings[0].writer);
+		   console.log(resp.postings[0].view);
+		   console.log(resp.postings[0].date); 
+	        
 		  
-		  resp.success = true;
+		 // resp.success = true;
 		  resp.pagenum = 1;
-		  resp.postings = fake;
+		 // resp.postings = fake;
 		  
 		renderPostings(resp.pagenum, resp.postings);
 	});	
@@ -58,15 +63,16 @@ function loadPosting ( pagenum ) {
 
 function renderPostings (pagenum, postings ) {
 	
-	var template = '<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>';
+	var template = '<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>';
 	var trContent = '';
 	for(var i=0; i<postings.length ; i++){
 		var p = postings[i];
 		var row  = template.replace('{0}', p.seq); //<tr><td>1222</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
-		row = row.replace('{1}', p.title); // <tr><td>1222</td><td>±Û³»¿ë</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
-		row = row.replace('{2}', p.writer);// <tr><td>1222</td><td>±Û³»¿ë</td><td>ppoo</td><td>{3}</td><td>{4}</td></tr>
-		row = row.replace('{3}', p.date);
-		row = row.replace('{4}', p.view);
+		row = row.replace('{1}', p.title); // <tr><td>1222</td><td>ê¸€ë‚´ìš©</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
+		row = row.replace('{2}', p.writer);// <tr><td>1222</td><td>ê¸€ë‚´ìš©</td><td>ppoo</td><td>{3}</td><td>{4}</td></tr>
+		row = row.replace('{3}', p.content);
+		row = row.replace('{4}', p.date);
+		row = row.replace('{5}', p.view);
 		trContent += row;
 	}
 	
@@ -84,38 +90,39 @@ function renderPostings (pagenum, postings ) {
      <table class="table" id="posting">
      	<tbody>
 		<tr class="header">
-			<td>±Û¹øÈ£</td>
-			<td>Á¦¸ñ</td>
-			<td>ÀÛ¼ºÀÚ</td>
-			<td>³¯Â¥</td>
-			<td>Á¶È¸¼ö</td>
+			<td>ê¸€ë²ˆí˜¸</td>
+			<td>ì œëª©</td>
+			<td>ì‘ì„±ì</td>
+			<td>ë‚´ìš©</td>
+			<td>ë‚ ì§œ</td>
+			<td>ì¡°íšŒìˆ˜</td>
 		</tr>
      	</tbody>
 		<!-- 
     	<tr class="each">
     		<td>1900</td>
-    		<td><a href="<%=request.getContextPath()%>/board/read/1900">ÀÌ°ÍÀº °Ô½ÃÆÇ ±ÛÀÌ´Ù.</a></td>
+    		<td><a href="<%=request.getContextPath()%>/board/read/1900">ì´ê²ƒì€ ê²Œì‹œíŒ ê¸€ì´ë‹¤.</a></td>
     		<td>pppo</td>
     		<td>20160514 12:33:12</td>
     		<td>1223</td>
     	</tr>
     	<tr class="each">
     		<td>1900</td>
-    		<td>ÀÌ°ÍÀº °Ô½ÃÆÇ ±ÛÀÌ´Ù.</td>
+    		<td>ì´ê²ƒì€ ê²Œì‹œíŒ ê¸€ì´ë‹¤.</td>
     		<td>pppo</td>
     		<td>20160514 12:33:12</td>
     		<td>1223</td>
     	</tr>
     	<tr class="each">
     		<td>1900</td>
-    		<td>ÀÌ°ÍÀº °Ô½ÃÆÇ ±ÛÀÌ´Ù.</td>
+    		<td>ì´ê²ƒì€ ê²Œì‹œíŒ ê¸€ì´ë‹¤.</td>
     		<td>pppo</td>
     		<td>20160514 12:33:12</td>
     		<td>1223</td>
     	</tr>
     	<tr class="each">
     		<td>1900</td>
-    		<td>ÀÌ°ÍÀº °Ô½ÃÆÇ ±ÛÀÌ´Ù.</td>
+    		<td>ì´ê²ƒì€ ê²Œì‹œíŒ ê¸€ì´ë‹¤.</td>
     		<td>pppo</td>
     		<td>20160514 12:33:12</td>
     		<td>1223</td>
