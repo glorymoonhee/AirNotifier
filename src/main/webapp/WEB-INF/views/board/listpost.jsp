@@ -8,6 +8,9 @@
 <title>로그인</title>
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
 <script type="text/javascript">
+
+var contextPath = '<%=request.getContextPath()%>';
+
 var fake = [{
 		seq : 1900,
 		title : 'hahaha',
@@ -39,7 +42,11 @@ var fake = [{
 	  loadPosting(pagenum);
   });
  
- 
+  $('#write_post').on('click',function(e){
+	  
+	   document.location.href = contextPath + '/board/write';
+	  
+  });
 	 
  });
  
@@ -47,11 +54,10 @@ function loadPosting ( pagenum ) {
 	var url = "<%=request.getContextPath()%>/board/api/posting/"+ pagenum;
 	$.get(url, function(resp){
 		 
-	      console.log(resp.sucess);
-	       console.log(resp.postings[0].writer);
-		   console.log(resp.postings[0].view);
-		   console.log(resp.postings[0].date); 
-	        
+	    console.log(resp.sucess);
+	    console.log(resp.postings[0].writer);
+		console.log(resp.postings[0].viewcount);
+		console.log(resp.postings[0].dataTime); 
 		  
 		 // resp.success = true;
 		  resp.pagenum = 1;
@@ -63,16 +69,17 @@ function loadPosting ( pagenum ) {
 
 function renderPostings (pagenum, postings ) {
 	
-	var template = '<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td><td>{5}</td></tr>';
+	var template = '<tr><td>{0}</td><td><a href="board/read/{pagenum}">{1}</a></td><td>{2}</td><td>{4}</td><td>{5}</td></tr>';
 	var trContent = '';
 	for(var i=0; i<postings.length ; i++){
 		var p = postings[i];
 		var row  = template.replace('{0}', p.seq); //<tr><td>1222</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{1}', p.title); // <tr><td>1222</td><td>글내용</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{2}', p.writer);// <tr><td>1222</td><td>글내용</td><td>ppoo</td><td>{3}</td><td>{4}</td></tr>
-		row = row.replace('{3}', p.content);
-		row = row.replace('{4}', p.date);
-		row = row.replace('{5}', p.view);
+		
+		row = row.replace('{4}', p.dataTime);
+		row = row.replace('{5}', p.viewcount);
+		row = row.replace('{pagenum}', p.seq);
 		trContent += row;
 	}
 	
@@ -84,7 +91,7 @@ function renderPostings (pagenum, postings ) {
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-<body>
+
 <div>
 	<div><span>2</span> of <span>32</span></div>
      <table class="table" id="posting">
@@ -93,11 +100,13 @@ function renderPostings (pagenum, postings ) {
 			<td>글번호</td>
 			<td>제목</td>
 			<td>작성자</td>
-			<td>내용</td>
+			
 			<td>날짜</td>
 			<td>조회수</td>
 		</tr>
      	</tbody>
+     	
+     	
 		<!-- 
     	<tr class="each">
     		<td>1900</td>
@@ -129,6 +138,7 @@ function renderPostings (pagenum, postings ) {
     	</tr>
 		 -->
     </table>
+      <button id="write_post">글쓰기</button>
     
     
     
@@ -137,7 +147,7 @@ function renderPostings (pagenum, postings ) {
   <li><a href="#">1</a></li>
   <li><a href="#">2</a></li>
   <li><a href="#">3</a></li>
-  <li><a href="#">4</a></li>
+ 
   <li><a href="#">5</a></li>
 	</ul>
 	</div>

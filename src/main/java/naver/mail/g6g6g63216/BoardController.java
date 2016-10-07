@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +29,38 @@ public class BoardController {
 		
 		return "/board/listpost";
 	}
+	
+	
+	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
+    public String board_write(Model model){
+		
+		return "/board/write";
+	}
+	
+	
+	@RequestMapping(value = "/board/doWrite", method = RequestMethod.POST, produces="application/json;charset=UTF-8")
+    public @ResponseBody String doWrite(Model model,HttpServletRequest request){
+		  
+		  String title = request.getParameter("title");
+		  String writer = request.getParameter("writer");
+		  String content = request.getParameter("content");
+		  
+		  System.out.println(title + ", " + writer + ", " + content);
+		  dao.insertPost(title, writer, content);
+		  System.out.println("OK!!!");
+		return "{}";
+	}
+	
+	
+	@RequestMapping(value = "/board/read/{postseq}", method = RequestMethod.GET )
+    public  String doRead(Model model,HttpServletRequest request, @PathVariable(value="postseq") Integer postseq){
+		System.out.println("pnum: " + postseq);
+		PostingVO post = dao.findBySeq(postseq);
+		request.setAttribute("post", post);
+		return "/board/read";
+	}
+	
+	
 	
 	@RequestMapping(value ="/board/api/posting/{pnum}", method = RequestMethod.GET, produces="application/json; charset=UTF-8")
 	public @ResponseBody  Map<String, Object> postingByPage( @PathVariable(value="pnum") Integer pnum){

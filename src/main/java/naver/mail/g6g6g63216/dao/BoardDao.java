@@ -33,10 +33,7 @@ private JdbcTemplate template ;
 				String content = rs.getString("content");
 				String date = rs.getString("date");
 				int viewcount = rs.getInt("viewcount");
-				//DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm a z");
-				//date.setDateFormat(df);
-				
-				System.out.println( writer+"~~~~~~~~~~~~~~~~~~~"+viewcount+"~~~~~~~~~~"+date);
+		
 				
 				PostingVO p = new PostingVO(seq, title, writer, content, date, viewcount);
 				
@@ -46,6 +43,38 @@ private JdbcTemplate template ;
 		});
 		
 		return postings;
+	}
+	
+	
+	public void insertPost(String title, String writer,String content){
+		String sql = "insert into postings (title,writer,content) values (?,?,?)";
+        template.update(sql, new Object[]{title,2,content});
+          		
+	}
+
+	public PostingVO findBySeq(Integer postseq) {
+		String sql = "select * from postings where seq = ?";
+		List<PostingVO> postings = template.query(sql,new Object[]{postseq}, new RowMapper<PostingVO>(){
+
+			@Override
+			public PostingVO mapRow(ResultSet rs, int rowNum) throws SQLException {
+
+				int seq = rs.getInt("seq");
+				String title = rs.getString("title");
+				String writer = rs.getString("writer");
+				String content = rs.getString("content");
+				String date = rs.getString("date");
+				int viewcount = rs.getInt("viewcount");
+		
+				
+				PostingVO p = new PostingVO(seq, title, writer, content, date, viewcount);
+				
+				return p;
+			}
+			
+		});
+		
+		return postings.get(0);
 	}
 	
 	
