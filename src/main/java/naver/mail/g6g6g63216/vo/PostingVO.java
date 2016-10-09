@@ -68,10 +68,10 @@ public class PostingVO {
 	public void setWriter(String writer) {
 		this.writer = writer;
 	}
-	public String getDataTime() {
+	public String getDateTime() {
 		return dateTime;
 	}
-	public void setDataTime(String dataTime) {
+	public void setDateTime(String dataTime) {
 		this.dateTime = dataTime;
 	}
 	  

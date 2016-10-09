@@ -46,7 +46,7 @@ $(document).ready(function() {
       <div class="col-sm-10">
 	<input type="password" class="form-control" id="password" name="password">
 	 </div>
-	<input type="button" value="가입하기" id="btnJoin">
+	 <div align="center"><input type="button" value="확인" id="btnJoin" class="btn btn-info"></div>
 	
 	</div>
 </form>

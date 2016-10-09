@@ -9,6 +9,8 @@
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
 <script type="text/javascript">
 
+
+
 var contextPath = '<%=request.getContextPath()%>';
 
 var fake = [{
@@ -27,11 +29,10 @@ var fake = [{
 	 }];
 	 
  $(document).ready(function(e){
-	 
-   loadPosting(1);
-   //renderPostings(fake);
    
-  $('.pagination').on('click',function(e){
+   loadPosting(1);
+   
+/*   $('.pagination').on('click',function(e){
 	  
 	  var ul = $(e.target).parent().parent(); // .closes( 'ul' )
 	  ul.children().removeClass('active');
@@ -40,7 +41,7 @@ var fake = [{
 	  var pagenum = $(e.target).text();
 	  
 	  loadPosting(pagenum);
-  });
+  }); */
  
   $('#write_post').on('click',function(e){
 	  
@@ -54,30 +55,29 @@ function loadPosting ( pagenum ) {
 	var url = "<%=request.getContextPath()%>/board/api/posting/"+ pagenum;
 	$.get(url, function(resp){
 		 
-	    console.log(resp.sucess);
-	    console.log(resp.postings[0].writer);
-		console.log(resp.postings[0].viewcount);
-		console.log(resp.postings[0].dataTime); 
-		  
+	    console.log(resp.sucess+'   성공여부');
+	
+	    
 		 // resp.success = true;
-		  resp.pagenum = 1;
+		  resp.pagenum = 1; //대체 해야함;
 		 // resp.postings = fake;
 		  
-		renderPostings(resp.pagenum, resp.postings);
+		renderPostings(resp.pagenum, resp.postings,resp.paging.pageSize,resp.paging.postSum);
+		// $("#pagenumbers").remove();
+		pagenate(resp.paging.startPageNo, resp.paging.endPageNo ,resp.paging.firstPageNo,resp.paging.prevPageNo,resp.paging.nextPageNo,resp.paging.finalPageNo);
 	});	
 }
 
-function renderPostings (pagenum, postings ) {
+function renderPostings (pagenum, postings, pageSize, postSum ) {
 	
 	var template = '<tr><td>{0}</td><td><a href="board/read/{pagenum}">{1}</a></td><td>{2}</td><td>{4}</td><td>{5}</td></tr>';
 	var trContent = '';
-	for(var i=0; i<postings.length ; i++){
+	for(var i= postSum-1 ; i< pageSize ; i++){
 		var p = postings[i];
 		var row  = template.replace('{0}', p.seq); //<tr><td>1222</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{1}', p.title); // <tr><td>1222</td><td>글내용</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{2}', p.writer);// <tr><td>1222</td><td>글내용</td><td>ppoo</td><td>{3}</td><td>{4}</td></tr>
-		
-		row = row.replace('{4}', p.dataTime);
+		row = row.replace('{4}', p.dateTime);
 		row = row.replace('{5}', p.viewcount);
 		row = row.replace('{pagenum}', p.seq);
 		trContent += row;
@@ -87,12 +87,54 @@ function renderPostings (pagenum, postings ) {
 }
 
 
+ function pagenate(st_no, end_no,firstpage,prevpage,nextpage,finalpage){
+	 $("#pagenumbers").empty();
+	 //location.reload(); 
+	  var html ='<ul class="pagination">';
+	for(var i=st_no; i<=end_no; i++){
+	 
+		
+		 html +='<li><a href="javascript:loadPosting('+ i + ');">' + i + '</a></li>';
+	}
+	html +='</ul>'; 
+	$("#pagenumbers").append(html);
+}
+
+ 
+ 
+ /*
+	  var html ='<ul class="pagination"><li><a href="#">'+firstpage+'</a></li><li><a href="#">'+prevpage+'</a></li>';
+	for(var i=st_no; i<=end_no; i++){
+		 html +='<li><a href="#">'+ i +'</a></li>';
+	}
+	html +='<li><a href="#">'+nextpage+'</a></li><li><a href="#">'+finalpage+'<a/></li></ul>'; 
+	$("#pagenumbers").append(html);
+}
+ 
+ 
+ 
+ */
+ 
+ 
+ 
+ 
+ 
+/* function goPage(page,year) {
+ if( year >= '2000' ){ // 년도체크
+            location.href = "etc08.jsp?div=08&page=" + page + "&year=" + year;     
+            alert("----통과----");
+ } else {
+     location.href = "etc08.jsp?div=08&page=" + page + "&year=";
+ }
+} */
+
+
 </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 
-<div>
+
 	<div><span>2</span> of <span>32</span></div>
      <table class="table" id="posting">
      	<tbody>
@@ -107,50 +149,20 @@ function renderPostings (pagenum, postings ) {
      	</tbody>
      	
      	
-		<!-- 
-    	<tr class="each">
-    		<td>1900</td>
-    		<td><a href="<%=request.getContextPath()%>/board/read/1900">이것은 게시판 글이다.</a></td>
-    		<td>pppo</td>
-    		<td>20160514 12:33:12</td>
-    		<td>1223</td>
-    	</tr>
-    	<tr class="each">
-    		<td>1900</td>
-    		<td>이것은 게시판 글이다.</td>
-    		<td>pppo</td>
-    		<td>20160514 12:33:12</td>
-    		<td>1223</td>
-    	</tr>
-    	<tr class="each">
-    		<td>1900</td>
-    		<td>이것은 게시판 글이다.</td>
-    		<td>pppo</td>
-    		<td>20160514 12:33:12</td>
-    		<td>1223</td>
-    	</tr>
-    	<tr class="each">
-    		<td>1900</td>
-    		<td>이것은 게시판 글이다.</td>
-    		<td>pppo</td>
-    		<td>20160514 12:33:12</td>
-    		<td>1223</td>
-    	</tr>
-		 -->
+		
     </table>
       <button id="write_post">글쓰기</button>
+
+
+
+
+
+
+<div align="center" id="pagenumbers" >
+
+</div>    
     
-    
-    
-    <div align="center">
-    <ul class="pagination">
-  <li><a href="#">1</a></li>
-  <li><a href="#">2</a></li>
-  <li><a href="#">3</a></li>
- 
-  <li><a href="#">5</a></li>
-	</ul>
-	</div>
-</div>
+
+
 </body>
 </html>

@@ -14,8 +14,24 @@
 <body>
 
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-<div><input type="text" id="title" name ="title" placeholder="글제목" class="form-control" value="${requestScope.post.title }"/></div>
-<div><div>${requestScope.post.content }</div></div>
 
+<div class="container-fluid">
+  
+          <div class="panel panel-default">
+               <div class="panel-heading"><font size="3"><strong>${requestScope.post.title }</strong></font></div>
+            
+                  <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-sm-8"><font size="2">글쓴이: ${requestScope.post.writer}</font></div>
+                            <div class="col-sm-4"><font size="2">날짜: ${requestScope.post.dateTime}</font></div>
+                        </div>
+                  </div>
+                  
+               <div class="panel-body" style="height:400px">${requestScope.post.content }</div>
+          
+          </div>
+          
+               <div align="center"><button type="button" class="btn btn-info">수정</button><button type="button" class="btn btn-danger">삭제</button></div>
+</div>
 </body>
 </html>
