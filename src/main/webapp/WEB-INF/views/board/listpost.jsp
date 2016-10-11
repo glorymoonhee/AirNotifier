@@ -32,16 +32,6 @@ var fake = [{
    
    loadPosting(1);
    
-/*   $('.pagination').on('click',function(e){
-	  
-	  var ul = $(e.target).parent().parent(); // .closes( 'ul' )
-	  ul.children().removeClass('active');
-	  $(e.target).parent().addClass('active');
-	  console.log('pnum click', $(e.target).text());
-	  var pagenum = $(e.target).text();
-	  
-	  loadPosting(pagenum);
-  }); */
  
   $('#write_post').on('click',function(e){
 	  
@@ -59,11 +49,14 @@ function loadPosting ( pagenum ) {
 	
 	    
 		 // resp.success = true;
-		  resp.pagenum = 1; //대체 해야함;
-		 // resp.postings = fake;
+		  resp.paging.pagenum = pagenum; //대체 해야함;
+		 
 		  
-		renderPostings(resp.pagenum, resp.postings,resp.paging.pageSize,resp.paging.postSum);
-		// $("#pagenumbers").remove();
+		 // resp.postings = fake;
+	 	  $('#posting tr:gt(0)').empty();
+	   //  $('#posting tbody').empty(); //empty() #posting (제외) 한 하위필드와 text 다 삭제
+	                              //remove() #posting 포함 다 삭제
+		renderPostings(resp.paging.pagenum, resp.postings, resp.paging.pageSize, resp.paging.postSum);
 		pagenate(resp.paging.startPageNo, resp.paging.endPageNo ,resp.paging.firstPageNo,resp.paging.prevPageNo,resp.paging.nextPageNo,resp.paging.finalPageNo);
 	});	
 }
@@ -72,9 +65,23 @@ function renderPostings (pagenum, postings, pageSize, postSum ) {
 	
 	var template = '<tr><td>{0}</td><td><a href="board/read/{pagenum}">{1}</a></td><td>{2}</td><td>{4}</td><td>{5}</td></tr>';
 	var trContent = '';
-	for(var i= postSum-1 ; i< pageSize ; i++){
+	var k =  postSum-1 ;
+	
+	
+	console.log('총개수'+postSum);
+	console.log('페이지번호'+pagenum);
+	console.log('페이지 사이즈 5가 나온다' + pageSize);
+
+	for(var i= k ; i< k+pageSize ; i++){
+              // i = 10, i< 15     10 11 12 13 14
+              //                          만약 14번이 없으면...
+             
 		var p = postings[i];
-		var row  = template.replace('{0}', p.seq); //<tr><td>1222</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
+           if (typeof(p) =='undefined'){
+        	   continue;
+           } 
+              
+    	var row  = template.replace('{0}', p.seq); //<tr><td>1222</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{1}', p.title); // <tr><td>1222</td><td>글내용</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{2}', p.writer);// <tr><td>1222</td><td>글내용</td><td>ppoo</td><td>{3}</td><td>{4}</td></tr>
 		row = row.replace('{4}', p.dateTime);
@@ -82,60 +89,41 @@ function renderPostings (pagenum, postings, pageSize, postSum ) {
 		row = row.replace('{pagenum}', p.seq);
 		trContent += row;
 	}
-	
 	$('#posting tr:last').after(trContent);
 }
 
 
  function pagenate(st_no, end_no,firstpage,prevpage,nextpage,finalpage){
-	 $("#pagenumbers").empty();
-	 //location.reload(); 
-	  var html ='<ul class="pagination">';
-	for(var i=st_no; i<=end_no; i++){
 	 
+	 
+	 
+	 $("#pagenumbers").empty();
+	 var html ='<ul class="pagination">';
+	 var pageinfo ='야야야';	 
+
+	 
+	 
+	for(var i=st_no; i<=end_no; i++){
 		
 		 html +='<li><a href="javascript:loadPosting('+ i + ');">' + i + '</a></li>';
 	}
 	html +='</ul>'; 
+	
+	
+	
 	$("#pagenumbers").append(html);
 }
 
- 
- 
- /*
-	  var html ='<ul class="pagination"><li><a href="#">'+firstpage+'</a></li><li><a href="#">'+prevpage+'</a></li>';
-	for(var i=st_no; i<=end_no; i++){
-		 html +='<li><a href="#">'+ i +'</a></li>';
-	}
-	html +='<li><a href="#">'+nextpage+'</a></li><li><a href="#">'+finalpage+'<a/></li></ul>'; 
-	$("#pagenumbers").append(html);
-}
- 
- 
- 
- */
- 
- 
- 
- 
- 
-/* function goPage(page,year) {
- if( year >= '2000' ){ // 년도체크
-            location.href = "etc08.jsp?div=08&page=" + page + "&year=" + year;     
-            alert("----통과----");
- } else {
-     location.href = "etc08.jsp?div=08&page=" + page + "&year=";
- }
-} */
 
 
 </script>
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-
-
-	<div><span>2</span> of <span>32</span></div>
+    <div> 
+	<div align="left" style="display:inline">여기 페이지번호 나타내라</div>
+	<div style="display:inline; float:right" ><button id="write_post" class="btn btn-info" >글쓰기</button></div>
+	</div>
      <table class="table" id="posting">
      	<tbody>
 		<tr class="header">
@@ -151,7 +139,8 @@ function renderPostings (pagenum, postings, pageSize, postSum ) {
      	
 		
     </table>
-      <button id="write_post">글쓰기</button>
+    
+
 
 
 

@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import naver.mail.g6g6g63216.dao.BoardDao;
 import naver.mail.g6g6g63216.service.Paging;
 import naver.mail.g6g6g63216.vo.PostingVO;
+import naver.mail.g6g6g63216.vo.UserVO;
 @Controller
 public class BoardController {
 
@@ -24,6 +26,7 @@ public class BoardController {
 	@Autowired
 	private BoardDao dao;
 	
+
 	 
 	@RequestMapping(value = "/board", method = RequestMethod.GET)
     public String board(Model model){
@@ -54,13 +57,28 @@ public class BoardController {
 	}
 	
 	
+	@RequestMapping(value = "/board/doDelete/{postseq}", method = RequestMethod.GET)
+    public String doDelete(Model model,HttpServletRequest request,@PathVariable(value="postseq") Integer postseq){
+		  
+                         		
+		int n = dao.deletePost(postseq);
+	    System.out.println(n+"n의 개수는뭐냐");
+	    return "redirect:/";
+		//질문 pathvariable 없이 get(url,data,function )request로 받을 수 잇아
+	}
+	
+	
+	
+	
+	
 	@RequestMapping(value = "/board/read/{postseq}", method = RequestMethod.GET )
     public  String doRead(Model model,HttpServletRequest request, @PathVariable(value="postseq") Integer postseq){
-		System.out.println("pnum: " + postseq);
 		PostingVO post = dao.findBySeq(postseq);
-		request.setAttribute("post", post);
-		System.out.println(post.getDateTime());
+		UserVO user = dao.findUserByseq(postseq);
 		
+		request.setAttribute("post", post);
+		request.setAttribute("user", user); //model 형식으로 보내도 됨;
+
 		
 		return "/board/read";
 	}
@@ -78,8 +96,8 @@ public class BoardController {
 	     paging.setPostSum(5 * (pnum-1) + 1);
 	    // this.setPostSum( pageSize * (pageNo-1) + 1 );
 		
-		System.out.println(" page num : " + pnum );
-		System.out.println(" count 번호 " + paging.getPostSum());
+		//System.out.println(" page num : " + pnum );
+		//System.out.println(" count 번호 " + paging.getPostSum());
 		
 		
 		List<PostingVO> p = dao.readAllpostings();
@@ -87,7 +105,7 @@ public class BoardController {
 		resp.put("sucess", Boolean.TRUE);
 		resp.put("postings", p);
 		resp.put("paging",paging);
-	
+	  
 		  return resp;
 	}
 	

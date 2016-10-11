@@ -10,6 +10,29 @@
 <!-- include summernote css/js-->
 <link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.css" rel="stylesheet">
 <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.2/summernote.js"></script>
+
+
+<script type="text/javascript">
+
+
+ $(document).ready(function() {
+	 $('.btn-group button').click(function(){
+		 var data_id = this.id;// $(this).id  this.id 차이  
+		 var postnum = $(this).val();
+		 var url = '<%=request.getContextPath()%>/board/'+ data_id + '/'+ postnum;
+		  console.log(url);
+	    $.get(url,postnum,function(){
+	    	 
+	    }); 
+		 
+	 });
+	 
+ });
+ 
+ 
+
+</script>
+
 </head>
 <body>
 
@@ -22,7 +45,7 @@
             
                   <div class="panel-heading">
                         <div class="row">
-                            <div class="col-sm-8"><font size="2">글쓴이: ${requestScope.post.writer}</font></div>
+                            <div class="col-sm-8"><font size="2">글쓴이: ${requestScope.user.email}</font></div>
                             <div class="col-sm-4"><font size="2">날짜: ${requestScope.post.dateTime}</font></div>
                         </div>
                   </div>
@@ -31,7 +54,13 @@
           
           </div>
           
-               <div align="center"><button type="button" class="btn btn-info">수정</button><button type="button" class="btn btn-danger">삭제</button></div>
+          
+          <div class='wrapper text-center'>
+       <div class="btn-group">
+  <button type="button" class="btn btn-primary" style="text-align:center" id="doUpdate" value=${requestScope.post.seq}>수정</button>
+  <button type="button" class="btn btn-primary" style="text-align:center" id="doDelete" value=${requestScope.post.seq}>삭제</button>
+         </div>
+          </div>
 </div>
 </body>
 </html>
