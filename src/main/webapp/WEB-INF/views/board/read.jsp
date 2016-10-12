@@ -21,13 +21,18 @@
 		 var postnum = $(this).val();
 		 var url = '<%=request.getContextPath()%>/board/'+ data_id + '/'+ postnum;
 		  console.log(url);
-	    $.get(url,postnum,function(){
-	    	 
-	    }); 
+	    $.get(url,postnum,function(res){
+	    	if(res.success){
+	    		  document.location.href = '<%=request.getContextPath()%>' + '/board';
+	    		
+	    		} 
+	    	
+	    	
+	    	}); 
 		 
-	 });
+		 });
 	 
- });
+ 	});
  
  
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
@@ -37,8 +38,13 @@ public class BoardController {
 	
 	
 	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
-    public String board_write(Model model){
+    public String board_write(Model model,HttpSession session){
 		
+		  UserVO loginUser = (UserVO) session.getAttribute("user");
+		  if(loginUser ==null){
+			  return "/login";
+		  }
+				
 		return "/board/write";
 	}
 	
@@ -57,13 +63,13 @@ public class BoardController {
 	}
 	
 	
-	@RequestMapping(value = "/board/doDelete/{postseq}", method = RequestMethod.GET)
-    public String doDelete(Model model,HttpServletRequest request,@PathVariable(value="postseq") Integer postseq){
+	@RequestMapping(value = "/board/doDelete/{postseq}", method = RequestMethod.GET, produces="application/json; charset=UTF-8")
+    public @ResponseBody String doDelete(Model model,HttpServletRequest request,@PathVariable(value="postseq") Integer postseq){
 		  
                          		
 		int n = dao.deletePost(postseq);
 	    System.out.println(n+"n의 개수는뭐냐");
-	    return "redirect:/";
+	    return "{\"success\": true}";
 		//질문 pathvariable 없이 get(url,data,function )request로 받을 수 잇아
 	}
 	

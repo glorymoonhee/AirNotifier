@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">	
 <title>로그인</title>
 <jsp:include page="/WEB-INF/views/common/common.jsp"></jsp:include>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <script type="text/javascript">
 
 
@@ -120,10 +121,20 @@ function renderPostings (pagenum, postings, pageSize, postSum ) {
 </head>
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
-    <div> 
+
+
+ <c:if test="${not empty sessionScope.user}">
+ 
+  <div>안녕하세요</div> 
+ </c:if>
+   <div> 
 	<div align="left" style="display:inline">여기 페이지번호 나타내라</div>
+
 	<div style="display:inline; float:right" ><button id="write_post" class="btn btn-info" >글쓰기</button></div>
 	</div>
+
+
+
      <table class="table" id="posting">
      	<tbody>
 		<tr class="header">
