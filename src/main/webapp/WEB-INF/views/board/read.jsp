@@ -16,9 +16,17 @@
 
 
  $(document).ready(function() {
+	 $('#doUpdate').click ( function() {
+		var uri ='/update/1211';
+		
+	 });
+	 $('#doDelete').click ( function() {
+		 var uri = '/delete/12211';
+	 });
+	 
 	 $('.btn-group button').click(function(){
 		 var data_id = this.id;// $(this).id  this.id 차이  
-		 var postnum = $(this).val();
+		 var postnum = $('#seq').val();
 		 var url = '<%=request.getContextPath()%>/board/'+ data_id + '/'+ postnum;
 		  console.log(url);
 	    $.get(url,postnum,function(res){
@@ -26,8 +34,6 @@
 	    		  document.location.href = '<%=request.getContextPath()%>' + '/board';
 	    		
 	    		} 
-	    	
-	    	
 	    	}); 
 		 
 		 });
@@ -46,6 +52,7 @@
 <div class="container-fluid">
   
           <div class="panel panel-default">
+          		<input type="hidden" id="seq" value="${requestScope.post.seq }">
                <div class="panel-heading"><font size="3"><strong>${requestScope.post.title }</strong></font></div>
             
                   <div class="panel-heading">
@@ -62,8 +69,8 @@
           
           <div class='wrapper text-center'>
        <div class="btn-group">
-  <button type="button" class="btn btn-primary" style="text-align:center" id="doUpdate" value=${requestScope.post.seq}>수정</button>
-  <button type="button" class="btn btn-primary" style="text-align:center" id="doDelete" value=${requestScope.post.seq}>삭제</button>
+  <button type="button" class="btn btn-primary" style="text-align:center" id="doUpdate" value="${requestScope.post.seq}">수정</button>
+  <button type="button" class="btn btn-primary" style="text-align:center" id="doDelete" value="${requestScope.post.seq}">삭제</button>
          </div>
           </div>
 </div>

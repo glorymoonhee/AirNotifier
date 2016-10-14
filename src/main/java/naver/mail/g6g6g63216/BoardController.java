@@ -39,7 +39,7 @@ public class BoardController {
 	
 	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
     public String board_write(Model model,HttpSession session, HttpServletRequest req){
-		
+		/*
 		  UserVO loginUser = (UserVO) session.getAttribute("user");
 		  
 		  if(loginUser ==null){
@@ -47,6 +47,7 @@ public class BoardController {
 			  session.setAttribute("nextUri", req.getRequestURI());
 			  return "redirect:/login";
 		  }
+		  */
 //		session.invalidate();
 		return "/board/write";
 	}

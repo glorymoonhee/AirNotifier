@@ -124,11 +124,13 @@ public class PlaceController {
 	public String myPlaces (HttpSession session,HttpServletRequest req){
 		
 		UserVO loginUser = (UserVO) session.getAttribute("user") ;
+		/*
 		if(loginUser ==null) {
 			session.setAttribute("nextUri", req.getRequestURI()); 
 			
 			return "redirect:/login"; 			
 		}
+		*/
 		List<StationVO> stations = userDao.findplaces( loginUser.getSeq());
 		req.setAttribute("stations", stations);
 		return "myplaces";

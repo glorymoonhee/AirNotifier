@@ -41,6 +41,11 @@
 		<context:exclude-filter type="regex" expression=".+\.service\..+"/>
 	</context:component-scan>
 	
-	
-	
+	<interceptors>
+		<interceptor>
+			<mapping path="/myplaces"/>
+			<mapping path="/board/write"/>
+			<beans:bean class="naver.mail.g6g6g63216.filter.TestInterceptor"></beans:bean>
+		</interceptor>
+	</interceptors>
 </beans:beans>
