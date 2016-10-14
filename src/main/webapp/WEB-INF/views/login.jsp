@@ -15,7 +15,7 @@ $(document).ready(function() {
 		$.post(url ,data, function(res){
 			if ( res.success ) {
 				alert ( '로그인 성공 ');
-				document.location.href = '<%=request.getContextPath()%>/';
+				document.location.href = res.nextUri ;
 			}
 		});
 		
@@ -23,6 +23,10 @@ $(document).ready(function() {
 });
 </script>
 </head>
+
+
+
+
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 
@@ -41,6 +45,7 @@ $(document).ready(function() {
     <div class="form-group">
       <label class="control-label col-sm-2" for="email">Email:</label>
       <div class="col-sm-10">
+        <input type="hidden" id="nextUri" name="nextUri" value="${sessionScope.nextUri}">
       	<input type="text" class="form-control" id="email" name="email" placeholder="이메일" value="gg@naver.com">
       </div>
     </div>
@@ -67,7 +72,7 @@ $(document).ready(function() {
 
 
 
-
+<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
 
 	
 	

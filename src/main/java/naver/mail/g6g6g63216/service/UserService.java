@@ -28,8 +28,8 @@ public class UserService {
 	@Autowired
 	private IUserDao userDao ;
 	
-	public UserVO insertUser ( String email, String password) {
-		UserVO user = userDao.insertUser(email, password);
+	public UserVO insertUser ( String email, String password,String name, String phonenumber) {
+		UserVO user = userDao.insertUser(email, password ,name , phonenumber);
 		// FIXME 동기 방식으로 메일을 전송하는데 메일 서버에서 응답이 올때까지 block 되어서 웹서버 성능이 극악으로 떨어짐.
 		//       비동기 방식으로 메일 전송하는 코드를 나주엥 넣어줘야 합니다.
 //		sendEmail ( user.getEmail(), "<h3>수내동 11시</h3>" );

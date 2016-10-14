@@ -31,6 +31,7 @@ private JdbcTemplate template ;
 				int seq = rs.getInt("seq");
 				String title = rs.getString("title");
 				String writer = rs.getString("writer");
+				//String writer = find_userName_BySeq(seq);
 				String content = rs.getString("content");
 				String date = rs.getString("date");
 				int viewcount = rs.getInt("viewcount");
@@ -83,6 +84,23 @@ private JdbcTemplate template ;
 	}
 	
 	
+/*	public String find_userName_BySeq(Integer postseq) {
+		String sql = "select name from users where users.seq in (select postings.writer from postings where postings.seq = ?)";
+		String name  = template.query(sql, new Object[]{postseq},new ResultSetExtractor<String>(){
+
+			@Override
+			public String extractData(ResultSet rs) throws SQLException, DataAccessException {
+				rs.next();
+				return rs.getString("writer");
+			}
+			
+		});
+		
+		return name;
+	}
+	*/
+	
+	
 	public UserVO findUserByseq (Integer postseq){
 		String sql ="select * from users where users.seq in (select postings.writer from postings where postings.seq = ?)";
 	    List<UserVO> user = template.query(sql, new Object[]{postseq}, new RowMapper<UserVO>(){
@@ -92,8 +110,9 @@ private JdbcTemplate template ;
 				 String email = rs.getString("email");
 				 String pass = rs.getString("pass");
 				 Integer seq = rs.getInt("seq");
-				  
-				 UserVO u = new UserVO(seq, email, pass);
+				 String name = rs.getString("name"); 
+					System.out.println(name+ "BoardDao 부분에서 나오는 user.getnName");
+				 UserVO u = new UserVO(seq, email, pass, name);
 				 
 				return u;
 			}

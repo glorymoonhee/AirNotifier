@@ -13,7 +13,7 @@ public interface IUserDao {
 	 * @param password
 	 * @return
 	 */
-	public UserVO insertUser ( String email, String password);
+	public UserVO insertUser ( String email, String password,String name, String phonenumber);
 	public int updateUser ( String email, String password);
 	public UserVO findUser(String email, String pass);
 	

@@ -14,21 +14,6 @@
 
 var contextPath = '<%=request.getContextPath()%>';
 
-var fake = [{
-		seq : 1900,
-		title : 'hahaha',
-		writer : 'ppoo',
-		date : '2016-09-12 12:33:12',
-		view : 1200
-	  },
-	  {
-				seq : 1899,
-				title : 'yesterday',
-				writer : 'wang',
-				date : '2016-09-11 22:00:12',
-				view : 1200
-	 }];
-	 
  $(document).ready(function(e){
    
    loadPosting(1);
@@ -53,7 +38,6 @@ function loadPosting ( pagenum ) {
 		  resp.paging.pagenum = pagenum; //대체 해야함;
 		 
 		  
-		 // resp.postings = fake;
 	 	  $('#posting tr:gt(0)').empty();
 	   //  $('#posting tbody').empty(); //empty() #posting (제외) 한 하위필드와 text 다 삭제
 	                              //remove() #posting 포함 다 삭제
@@ -69,10 +53,7 @@ function renderPostings (pagenum, postings, pageSize, postSum ) {
 	var k =  postSum-1 ;
 	
 	
-	console.log('총개수'+postSum);
-	console.log('페이지번호'+pagenum);
-	console.log('페이지 사이즈 5가 나온다' + pageSize);
-
+	
 	for(var i= k ; i< k+pageSize ; i++){
               // i = 10, i< 15     10 11 12 13 14
               //                          만약 14번이 없으면...
@@ -162,7 +143,7 @@ function renderPostings (pagenum, postings, pageSize, postSum ) {
 
 </div>    
     
-
+<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
 
 </body>
 </html>

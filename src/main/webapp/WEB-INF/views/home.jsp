@@ -18,6 +18,8 @@ html, body {
 #map {
 	height: 300px;
 }
+
+#example ul li {color:blue}
 </style>
  <script type="text/javascript">
 var ctxpath = '<%=request.getContextPath()%>';
@@ -273,10 +275,11 @@ $(document).ready ( function() {
       
 	
 	 $('#example').vTicker('init', {
-		    speed: 400, 
-		    pause: 1000,
-		    showItems: 2,
-		    padding: 4
+		    speed: 900, 
+		    pause: 2000,
+		    showItems: 5,
+		    padding: 4,
+		    mousePause: false,
 		  });
 	
 	 google.charts.load('current', {'packages':['corechart']});
@@ -297,28 +300,29 @@ $(document).ready ( function() {
 		</div>
 	</div>
 	
+	<div class="container">
+	
 	<div class="row" >
 		<!-- 그리스 시스템 : http://bootstrapk.com/css/#grid -->
 		
-		 <div id ="example">
-		
+		 <div class="col-sm-6" id ="example">
 		<ul>
 		   <c:forEach var="data" items="${sidoData}" >
-		   
-		       <li>${sidoMap[data]} PM10 : ${data.pm100} (${data.pm100Grade}등급)  PM2.5 : ${data.pm025}(${data.pm025Grade}등급)</li>
-		       
-		       
+		       <li>${sidoMap[data]}  PM10  :  ${data.pm100}  ( ${data.pm100Grade}등급 ) 　 PM2.5 : ${data.pm025} ( ${data.pm025Grade} 등급 )</li>
 		   </c:forEach>
 	 	</ul>
-		
 		</div>
-		<div id="chart" >
 		
+		<div class="col-sm-6">
+		 <jsp:include page="/WEB-INF/views/bullet_chart.jsp"></jsp:include>
 		</div>
+	</div>
 	
 	</div>
+	
+	
 </div>
-
+<jsp:include page="/WEB-INF/views/common/footer.jsp"></jsp:include>
 </body>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAHMC2m-a0168rs3InKfOwn-O7a_fYSjVM&callback=initMap"></script>
 <script type="text/javascript">

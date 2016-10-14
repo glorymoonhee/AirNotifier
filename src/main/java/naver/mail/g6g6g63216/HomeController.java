@@ -30,7 +30,6 @@ import naver.mail.g6g6g63216.dao.IPmDao;
 import naver.mail.g6g6g63216.service.UserService;
 import naver.mail.g6g6g63216.vo.PmData;
 import naver.mail.g6g6g63216.vo.UserVO;
-
 /**
  * Handles requests for the application home page.
  */
@@ -94,8 +93,10 @@ public class HomeController {
 	public @ResponseBody String doJoin(Model model, HttpServletRequest req) {
 	     String email = req.getParameter("email");
 	     String pass = req.getParameter("password");
+	     String name = req.getParameter("name");
+	     String phonenumber = req.getParameter("phonenumber");
 	     
-	     UserVO user = userService.insertUser ( email, pass  );
+	     UserVO user = userService.insertUser ( email, pass,name,phonenumber  );
 	     System.out.println("가입: " + user.toString());
 	     
 	     // json 포맷으로 응답을 보내야 합니다. { "success" : true}
@@ -133,16 +134,26 @@ public class HomeController {
 	public @ResponseBody String dologin(Model model, HttpServletRequest req, HttpSession session){
 	     String email = req.getParameter("email");
 	     String pass = req.getParameter("password");
+	     String nextUri = req.getParameter("nextUri");
+	     
+	     if(nextUri.length() == 0){
+	    	 
+	    	 nextUri = req.getContextPath() + "/";
+	     }
 	     
 	     UserVO user = userService.findUser(email,pass);
+	     if ( user != null ) {
+	    	session.removeAttribute("nextUri");
+	     } else {
+	    	 ;
+	     }
 	     System.out.println("로긴: " + user.toString());
+	  
 	     
-	     /*
-	      * 1. 세선에 사용자 등록해줘야함.
-	      */
 	     session.setAttribute("user", user);
 	     
-	     return "{\"success\": true}";
+	     return "{\"success\": true , \"nextUri\": \"" + nextUri + "\"}";
+	     
 	}
 	
 	

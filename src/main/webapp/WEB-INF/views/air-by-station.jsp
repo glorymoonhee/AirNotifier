@@ -104,7 +104,6 @@ $(document).ready( function() {
 <body>
 <jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 <select id="sido">
-
 <c:forEach var="i" items="${sidos}">
 <c:if test="${sido eq i}"><option value="${i}" selected="selected" >${i}</option></c:if>
 <c:if test="${sido ne i}"><option value="${i}"  >${i}</option></c:if>
@@ -214,6 +213,6 @@ $(document).ready( function() {
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 </body>
 </html>

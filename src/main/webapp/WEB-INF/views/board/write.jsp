@@ -53,7 +53,7 @@ $(document).ready(function() {
 	
 	<div><button id="btn_write" >확인</button></div>
 </form>
-
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 
 </body>
 </html>

@@ -50,7 +50,7 @@
             
                   <div class="panel-heading">
                         <div class="row">
-                            <div class="col-sm-8"><font size="2">글쓴이: ${requestScope.user.email}</font></div>
+                            <div class="col-sm-8"><font size="2">글쓴이: ${requestScope.user.name}</font></div>
                             <div class="col-sm-4"><font size="2">날짜: ${requestScope.post.dateTime}</font></div>
                         </div>
                   </div>
@@ -67,5 +67,6 @@
          </div>
           </div>
 </div>
+<jsp:include page="/WEB-INF/views/common/header.jsp"></jsp:include>
 </body>
 </html>

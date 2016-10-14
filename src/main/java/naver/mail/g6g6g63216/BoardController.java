@@ -38,13 +38,16 @@ public class BoardController {
 	
 	
 	@RequestMapping(value = "/board/write", method = RequestMethod.GET)
-    public String board_write(Model model,HttpSession session){
+    public String board_write(Model model,HttpSession session, HttpServletRequest req){
 		
 		  UserVO loginUser = (UserVO) session.getAttribute("user");
+		  
 		  if(loginUser ==null){
-			  return "/login";
+			 
+			  session.setAttribute("nextUri", req.getRequestURI());
+			  return "redirect:/login";
 		  }
-				
+//		session.invalidate();
 		return "/board/write";
 	}
 	
@@ -81,11 +84,10 @@ public class BoardController {
     public  String doRead(Model model,HttpServletRequest request, @PathVariable(value="postseq") Integer postseq){
 		PostingVO post = dao.findBySeq(postseq);
 		UserVO user = dao.findUserByseq(postseq);
-		
+		System.out.println(user.getName()+ "Boardcontroller 부분에서 나오는 user.getnName");
 		request.setAttribute("post", post);
 		request.setAttribute("user", user); //model 형식으로 보내도 됨;
 
-		
 		return "/board/read";
 	}
 	
@@ -100,11 +102,7 @@ public class BoardController {
 	     paging.setPageSize(5);
 	     paging.setTotalCount(total_count);
 	     paging.setPostSum(5 * (pnum-1) + 1);
-	    // this.setPostSum( pageSize * (pageNo-1) + 1 );
-		
-		//System.out.println(" page num : " + pnum );
-		//System.out.println(" count 번호 " + paging.getPostSum());
-		
+
 		
 		List<PostingVO> p = dao.readAllpostings();
 		Map<String, Object> resp = new HashMap<String, Object>();

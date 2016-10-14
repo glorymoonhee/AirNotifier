@@ -25,9 +25,9 @@ public class UserDao implements IUserDao {
 		this.template = template;
 	}
 	@Override
-	public UserVO insertUser(final String email, final String password) { //왜 final 인지 
+	public UserVO insertUser(final String email, final String password,final String name, final String phonenumber) { //왜 final 인지 
 		
-		final String query ="insert into users (email,pass) values (?, ?)";
+		final String query ="insert into users (email,pass,name,phonenumber) values (?, ?,?,?)";
 		
 		PreparedStatementCreator psc = new PreparedStatementCreator() {
 			
@@ -36,6 +36,8 @@ public class UserDao implements IUserDao {
 				PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 				stmt.setString(1, email);
 				stmt.setString(2, password);
+				stmt.setString(3, name);
+				stmt.setString(4, phonenumber);
 				return stmt ;
 			}
 		};
@@ -45,7 +47,7 @@ public class UserDao implements IUserDao {
 		
 		Integer seq = holder.getKey().intValue();
 		
-		UserVO user = new UserVO( seq, email, password);
+		UserVO user = new UserVO( seq, email, password,name, phonenumber);
 		return user ;
 	}
 	
